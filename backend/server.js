@@ -195,22 +195,30 @@ app.use('/api/search', searchRoutes);
 app.use('/api/payments', paymentsRoutes);
 
 // ---------------------
-// Serve static frontend build (if built)
+// Serve static frontend build (try multiple possible locations)
 // ---------------------
-const publicDir = path.join(__dirname, 'public');
-if (fs.existsSync(publicDir)) {
+const frontendCandidates = [
+  path.join(__dirname, 'public'),                    // backend/public/ (copy approach)
+  path.join(__dirname, '..', 'frontend', 'dist'),    // frontend/dist/ (direct Vite output)
+];
+let publicDir = null;
+for (const dir of frontendCandidates) {
+  if (fs.existsSync(dir) && fs.existsSync(path.join(dir, 'index.html'))) {
+    publicDir = dir;
+    break;
+  }
+}
+if (publicDir) {
   app.use(express.static(publicDir));
-  console.log('[WishPal] Serving static frontend from public/');
+  console.log(`[WishPal] Serving static frontend from ${publicDir}`);
 }
 
 // ---------------------
 // SPA Fallback & 404 Handler
 // ---------------------
 app.use((req, res) => {
-  // Serve index.html for non-API routes if frontend build exists
-  const indexFile = path.join(__dirname, 'public', 'index.html');
-  if (fs.existsSync(indexFile) && !req.path.startsWith('/api')) {
-    return res.sendFile(indexFile);
+  if (publicDir && !req.path.startsWith('/api')) {
+    return res.sendFile(path.join(publicDir, 'index.html'));
   }
   res.status(404).json({ error: `Route ${req.method} ${req.path} not found` });
 });

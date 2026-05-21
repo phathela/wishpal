@@ -4,7 +4,7 @@
   "description": "WishPal - Your Wishes, Matched by AI",
   "private": true,
   "scripts": {
-    "build": "cd frontend && npm run build && mkdir -p ../backend/public && cp -r dist/* ../backend/public/",
+    "build": "cd frontend && npm run build",
     "start": "cd backend && node server.js",
     "postinstall": "(cd backend && npm install) && (cd frontend && npm install)"
   },
