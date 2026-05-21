@@ -166,7 +166,19 @@ io.on('connection', (socket) => {
 // ---------------------
 // Health Check
 // ---------------------
-app.get('/api/health', async (req, res) => {
+
+// Liveness probe — always returns 200 so Railway's healthcheck passes
+// regardless of database availability.
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Readiness probe — verifies database connectivity for monitoring purposes.
+// Not used by Railway's healthcheck; will return 503 when the DB is unreachable.
+app.get('/api/health/ready', async (req, res) => {
   try {
     await pool.query('SELECT 1');
     res.json({
