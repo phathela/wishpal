@@ -195,19 +195,22 @@ app.use('/api/search', searchRoutes);
 app.use('/api/payments', paymentsRoutes);
 
 // ---------------------
-// Production: Serve static frontend build
+// Serve static frontend build (if built)
 // ---------------------
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'public')));
+const publicDir = path.join(__dirname, 'public');
+if (fs.existsSync(publicDir)) {
+  app.use(express.static(publicDir));
+  console.log('[WishPal] Serving static frontend from public/');
 }
 
 // ---------------------
 // SPA Fallback & 404 Handler
 // ---------------------
 app.use((req, res) => {
-  // In production, serve index.html for non-API routes (SPA routing)
-  if (process.env.NODE_ENV === 'production' && !req.path.startsWith('/api')) {
-    return res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  // Serve index.html for non-API routes if frontend build exists
+  const indexFile = path.join(__dirname, 'public', 'index.html');
+  if (fs.existsSync(indexFile) && !req.path.startsWith('/api')) {
+    return res.sendFile(indexFile);
   }
   res.status(404).json({ error: `Route ${req.method} ${req.path} not found` });
 });
