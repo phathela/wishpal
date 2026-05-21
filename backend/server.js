@@ -185,8 +185,28 @@ app.get('/api/health', async (req, res) => {
 });
 
 // ---------------------
-// Mount Routes
+// Debug: show directory structure for diagnosing frontend issues
 // ---------------------
+app.get('/api/debug', (req, res) => {
+  const candidates = [
+    path.join(__dirname, 'public'),
+    path.join(__dirname, '..', 'frontend', 'dist'),
+    path.join(__dirname, '..', 'frontend'),
+    path.join(__dirname, '..'),
+  ];
+  const checks = candidates.map(dir => ({
+    dir,
+    exists: fs.existsSync(dir),
+    hasIndex: fs.existsSync(path.join(dir, 'index.html')),
+    contents: fs.existsSync(dir) ? fs.readdirSync(dir).slice(0, 20) : []
+  }));
+  res.json({
+    cwd: process.cwd(),
+    __dirname: __dirname,
+    checks,
+    nodeEnv: process.env.NODE_ENV
+  });
+});
 app.use('/api/auth', authRoutes);
 app.use('/api/wishes', wishesRoutes);
 app.use('/api/matches', matchesRoutes);
