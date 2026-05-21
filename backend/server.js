@@ -23,6 +23,30 @@ const agentWorker = require('./workers/agentWorker');
 
 // Import DB
 const pool = require('./db/pool');
+const fs = require('fs');
+
+/**
+ * Run database migrations automatically on startup.
+ */
+async function runMigrations() {
+  const migrationsDir = path.join(__dirname, 'db', 'migrations');
+  if (!fs.existsSync(migrationsDir)) return;
+
+  const files = fs.readdirSync(migrationsDir)
+    .filter(f => f.endsWith('.sql'))
+    .sort();
+
+  for (const file of files) {
+    const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');
+    try {
+      await pool.query(sql);
+      console.log(`[Migration] Applied: ${file}`);
+    } catch (err) {
+      // If migration already applied or error, log and continue
+      console.log(`[Migration] ${file}: ${err.message}`);
+    }
+  }
+}
 
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-dev-secret';
@@ -196,17 +220,34 @@ app.use(errorHandler);
 // ---------------------
 // Start Server
 // ---------------------
-server.listen(PORT, () => {
-  console.log(`[WishPal] Server running on port ${PORT}`);
-  console.log(`[WishPal] Frontend URL: ${FRONTEND_URL}`);
-  console.log(`[WishPal] Environment: ${process.env.NODE_ENV || 'development'}`);
+async function startServer() {
+  // Wait for database and run migrations
+  for (let i = 0; i < 10; i++) {
+    try {
+      await pool.query('SELECT 1');
+      console.log('[WishPal] Database connected');
+      await runMigrations();
+      break;
+    } catch (err) {
+      console.log(`[WishPal] Waiting for database... (${i + 1}/10)`);
+      await new Promise(r => setTimeout(r, 3000));
+    }
+  }
 
-  // Initialize and start the agent worker with Socket.io
-  agentWorker.initWorker(io);
-  agentWorker.startWorker();
+  server.listen(PORT, () => {
+    console.log(`[WishPal] Server running on port ${PORT}`);
+    console.log(`[WishPal] Frontend URL: ${FRONTEND_URL}`);
+    console.log(`[WishPal] Environment: ${process.env.NODE_ENV || 'development'}`);
 
-  console.log('[WishPal] Agent worker started');
-});
+    // Initialize and start the agent worker with Socket.io
+    agentWorker.initWorker(io);
+    agentWorker.startWorker();
+
+    console.log('[WishPal] Agent worker started');
+  });
+}
+
+startServer();
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
