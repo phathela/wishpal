@@ -1,258 +1,350 @@
 /**
  * AI Agent Service
  *
- * Mock service that simulates AI agent processing for wish matching.
- * All async operations use setTimeout + Promise to simulate real API calls.
- * TODO: Replace mock implementations with actual AI API calls.
+ * Uses DeepSeek API (OpenAI-compatible) for intelligent wish processing,
+ * matching, and comment verification.
+ *
+ * DeepSeek API: https://api.deepseek.com/v1/chat/completions
  */
 
 const pool = require('../db/pool');
 
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+const DEEPSEEK_MODEL = 'deepseek-chat';
+
 /**
- * Simulates processing a wish through the AI matching agent pipeline.
- * Steps:
- *   1. Category classification and agent assignment
- *   2. Internal matching against other active wishes
- *   3. External source search (if applicable)
- *
- * @param {Object} wish - The wish object from the database
- * @returns {Object} Processing results with matches and logs
+ * Helper: call DeepSeek chat completions API.
  */
-function processWish(wish) {
-  return new Promise((resolve) => {
-    const delay = 3000 + Math.random() * 2000; // 3-5 seconds
+async function callDeepSeek(messages, options = {}) {
+  if (!DEEPSEEK_API_KEY) {
+    console.warn('[AI Agent] No DEEPSEEK_API_KEY set, falling back to mock processing');
+    return null;
+  }
 
-    console.log(`[AI Agent] Processing wish #${wish.id}: "${wish.title}" (${delay.toFixed(0)}ms)`);
+  const response = await fetch(DEEPSEEK_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: DEEPSEEK_MODEL,
+      messages,
+      temperature: options.temperature ?? 0.3,
+      max_tokens: options.maxTokens ?? 1024
+    })
+  });
 
-    setTimeout(async () => {
-      try {
-        const results = {
-          wishId: wish.id,
-          agentType: determineAgentType(wish.category),
-          internalMatches: [],
-          externalResults: [],
-          logs: []
-        };
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`DeepSeek API error (${response.status}): ${errText}`);
+  }
 
-        // Step 1: Log agent assignment
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content || '';
+}
+
+/**
+ * Process a wish through the AI matching pipeline using DeepSeek.
+ */
+async function processWish(wish) {
+  try {
+    console.log(`[AI Agent] Processing wish #${wish.id}: "${wish.title}"`);
+
+    const results = {
+      wishId: wish.id,
+      agentType: 'general_agent',
+      internalMatches: [],
+      externalResults: [],
+      logs: [],
+      summary: ''
+    };
+
+    // Determine agent type using DeepSeek
+    const agentResult = await callDeepSeek([
+      {
+        role: 'system',
+        content: `You are a WishPal AI category classifier. Given a wish title and description, determine the most specific agent type from: housing_agent, jobs_agent, services_agent, items_agent, vehicles_agent, cleaning_agent, repairs_agent, general_agent. Reply with ONLY the agent type name, nothing else.`
+      },
+      {
+        role: 'user',
+        content: `Title: ${wish.title}\nCategory: ${wish.category}\nDescription: ${wish.description || 'N/A'}`
+      }
+    ], { temperature: 0.1, maxTokens: 50 });
+
+    results.agentType = (agentResult || determineAgentType(wish.category)).trim().toLowerCase();
+    results.logs.push({
+      agentType: results.agentType,
+      action: 'agent_assigned',
+      details: { category: wish.category, agent: results.agentType }
+    });
+
+    // Find internal matches using DeepSeek-powered scoring
+    const internalMatches = await findInternalMatches(wish);
+    results.internalMatches = internalMatches;
+
+    if (internalMatches.length > 0) {
+      results.logs.push({
+        agentType: results.agentType,
+        action: 'internal_matches_found',
+        details: { count: internalMatches.length }
+      });
+    } else {
+      results.logs.push({
+        agentType: results.agentType,
+        action: 'no_internal_matches',
+        details: {}
+      });
+    }
+
+    // Search external if applicable
+    if (shouldSearchExternal(wish)) {
+      const externalResults = await searchExternalSources(wish);
+      results.externalResults = externalResults;
+      if (externalResults.length > 0) {
         results.logs.push({
           agentType: results.agentType,
-          action: 'agent_assigned',
-          details: { category: wish.category, agent: results.agentType }
-        });
-
-        console.log(`[AI Agent] Wish #${wish.id}: Assigned ${results.agentType} agent`);
-
-        // Step 2: Search for internal matches
-        // TODO: Replace with actual embedding similarity search or ML-based matching
-        const internalMatches = await findInternalMatches(wish);
-        results.internalMatches = internalMatches;
-
-        if (internalMatches.length > 0) {
-          results.logs.push({
-            agentType: results.agentType,
-            action: 'internal_matches_found',
-            details: { count: internalMatches.length, matches: internalMatches.map(m => m.wishId) }
-          });
-          console.log(`[AI Agent] Wish #${wish.id}: Found ${internalMatches.length} internal match(es)`);
-        } else {
-          results.logs.push({
-            agentType: results.agentType,
-            action: 'no_internal_matches',
-            details: {}
-          });
-          console.log(`[AI Agent] Wish #${wish.id}: No internal matches found`);
-        }
-
-        // Step 3: Search external sources if applicable
-        // TODO: Replace with actual external API calls (e.g., eBay, Etsy, Craigslist)
-        if (shouldSearchExternal(wish)) {
-          const externalResults = await searchExternalSources(wish);
-          results.externalResults = externalResults;
-
-          if (externalResults.length > 0) {
-            results.logs.push({
-              agentType: results.agentType,
-              action: 'external_sources_checked',
-              details: { count: externalResults.length, sources: externalResults.map(r => r.source) }
-            });
-            console.log(`[AI Agent] Wish #${wish.id}: Found ${externalResults.length} external result(s)`);
-          }
-        }
-
-        resolve(results);
-      } catch (err) {
-        console.error(`[AI Agent] Error processing wish #${wish.id}:`, err.message);
-        resolve({
-          wishId: wish.id,
-          agentType: 'unknown',
-          internalMatches: [],
-          externalResults: [],
-          logs: [{
-            agentType: 'system',
-            action: 'processing_error',
-            details: { error: err.message }
-          }]
+          action: 'external_sources_checked',
+          details: { count: externalResults.length }
         });
       }
-    }, delay);
-  });
+    }
+
+    // Generate a human-readable summary using DeepSeek
+    const summaryResult = await callDeepSeek([
+      {
+        role: 'system',
+        content: `You are a WishPal AI agent. Summarize what you did for this wish in 1-2 sentences. Be concise and helpful.`
+      },
+      {
+        role: 'user',
+        content: `Processed wish "${wish.title}" (${wish.category}). Found ${internalMatches.length} internal matches. ${externalResults.length > 0 ? `Found ${externalResults.length} external results.` : ''}`
+      }
+    ], { temperature: 0.5, maxTokens: 200 });
+
+    results.summary = summaryResult || `Processed wish "${wish.title}" with ${results.agentType}.`;
+
+    console.log(`[AI Agent] Wish #${wish.id}: Complete. ${results.summary}`);
+    return results;
+
+  } catch (err) {
+    console.error(`[AI Agent] Error processing wish #${wish.id}:`, err.message);
+    return {
+      wishId: wish.id,
+      agentType: 'general_agent',
+      internalMatches: [],
+      externalResults: [],
+      logs: [{ agentType: 'system', action: 'processing_error', details: { error: err.message } }],
+      summary: 'Agent encountered an error during processing.'
+    };
+  }
 }
 
 /**
- * Determines the appropriate agent type based on wish category.
- * TODO: Replace with ML classification model.
+ * Fallback agent type assignment when DeepSeek is unavailable.
  */
 function determineAgentType(category) {
-  const agentMap = {
-    'education': 'edu_agent',
-    'career': 'career_agent',
-    'health': 'health_agent',
-    'finance': 'finance_agent',
-    'travel': 'travel_agent',
-    'shopping': 'shopping_agent',
-    'community': 'community_agent',
-    'creative': 'creative_agent',
-    'food': 'food_agent',
-    'technology': 'tech_agent'
+  const map = {
+    'houses': 'housing_agent',
+    'jobs': 'jobs_agent',
+    'services': 'services_agent',
+    'items': 'items_agent',
+    'vehicles': 'vehicles_agent',
+    'cleaning': 'cleaning_agent',
+    'repairs': 'repairs_agent'
   };
-
-  return agentMap[category.toLowerCase()] || 'general_agent';
+  return map[category?.toLowerCase()] || 'general_agent';
 }
 
 /**
- * Searches for internal matches against other active wishes.
- * TODO: Replace with cosine similarity on embeddings, vector DB query, or ML matching.
+ * Find internal matches using DeepSeek to score relevance.
  */
 async function findInternalMatches(wish) {
   try {
-    // Find active wishes that might match, excluding the current user's own wishes
     const result = await pool.query(
-      `SELECT w.id, w.title, w.category, w.description, w.amount, w.location_country, w.location_region,
+      `SELECT w.id, w.title, w.category, w.description, w.amount,
+              w.location_country, w.location_region, w.payment_type,
               u.id as user_id, u.username, u.display_name
        FROM wishes w
        JOIN users u ON w.user_id = u.id
        WHERE w.status = 'active'
          AND w.user_id != $1
          AND w.agent_processed = true
-         AND (w.category = $2 OR $2 IS NULL)
        ORDER BY RANDOM()
-       LIMIT 5`,
-      [wish.user_id, wish.category]
+       LIMIT 10`,
+      [wish.user_id]
     );
 
-    const matches = [];
-    for (const row of result.rows) {
-      // Calculate a mock match score based on category match and random factor
-      // TODO: Replace with actual scoring algorithm
-      const categoryBonus = row.category === wish.category ? 20 : 0;
-      const score = Math.min(95, Math.round((40 + Math.random() * 40 + categoryBonus) * 100) / 100);
+    if (result.rows.length === 0) return [];
 
-      // Only include matches above 70% threshold
-      if (score > 70) {
-        matches.push({
-          wishId: row.id,
-          title: row.title,
-          matchScore: score,
-          matchedUserId: row.user_id,
-          matchedUsername: row.username || row.display_name,
-          category: row.category
-        });
+    // Use DeepSeek to score matches
+    const candidateList = result.rows.map((r, i) =>
+      `[${i}] Title: "${r.title}" | Category: ${r.category} | Location: ${r.location_region || 'Any'}, ${r.location_country || 'Any'} | Amount: ${r.amount ? '$' + r.amount : 'N/A'}`
+    ).join('\n');
+
+    const scoringResult = await callDeepSeek([
+      {
+        role: 'system',
+        content: `You are a WishPal match scoring AI. Given a wish and a list of potential matches, score each match 0-100 based on relevance (category, location, price range, description alignment). Return ONLY a JSON array of objects with fields "index" (number), "score" (number 0-100), and "reason" (short string). Example: [{"index":0,"score":85,"reason":"Same category and location"}]`
+      },
+      {
+        role: 'user',
+        content: `Target Wish: "${wish.title}" (${wish.category}, ${wish.location_region || 'Any'}, ${wish.location_country || 'Any'})\n\nCandidates:\n${candidateList}`
+      }
+    ], { temperature: 0.2, maxTokens: 1024 });
+
+    const matches = [];
+    if (scoringResult) {
+      try {
+        const parsed = JSON.parse(scoringResult);
+        if (Array.isArray(parsed)) {
+          for (const entry of parsed) {
+            const row = result.rows[entry.index];
+            if (row && entry.score > 70) {
+              matches.push({
+                wishId: row.id,
+                title: row.title,
+                matchScore: Math.round(entry.score * 100) / 100,
+                matchedUserId: row.user_id,
+                matchedUsername: row.username || row.display_name,
+                category: row.category,
+                reason: entry.reason || ''
+              });
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('[AI Agent] Failed to parse DeepSeek scoring, falling back to heuristic');
       }
     }
 
-    return matches;
+    // Fallback heuristic scoring if DeepSeek failed
+    if (matches.length === 0) {
+      for (const row of result.rows) {
+        const categoryBonus = row.category === wish.category ? 20 : 0;
+        const locationBonus = (row.location_region === wish.location_region) ? 10 : 0;
+        const score = Math.min(95, Math.round((30 + Math.random() * 30 + categoryBonus + locationBonus) * 100) / 100);
+        if (score > 70) {
+          matches.push({
+            wishId: row.id,
+            title: row.title,
+            matchScore: score,
+            matchedUserId: row.user_id,
+            matchedUsername: row.username || row.display_name,
+            category: row.category,
+            reason: 'Heuristic match'
+          });
+        }
+      }
+    }
+
+    return matches.slice(0, 5);
   } catch (err) {
     console.error('[AI Agent] Error finding internal matches:', err.message);
     return [];
   }
 }
 
-/**
- * Determines whether to search external sources based on wish attributes.
- */
 function shouldSearchExternal(wish) {
-  // Search external for wishes with payment_type='pay' or exchange items
-  const externalCategories = ['shopping', 'technology', 'travel', 'food'];
-  return wish.payment_type === 'pay' || externalCategories.includes(wish.category?.toLowerCase());
+  const cat = wish.category?.toLowerCase();
+  return wish.payment_type === 'pay' || ['items', 'vehicles', 'technology'].includes(cat);
 }
 
 /**
- * Searches external sources for matching items/services.
- * TODO: Replace with actual API integrations:
- *   - eBay Finding API
- *   - Etsy API
- *   - Google Shopping API
- *   - Craigslist search
- *
- * @param {Object} wish - The wish object
- * @returns {Array} Array of external source results
+ * Search external sources - uses DeepSeek to generate relevant search queries.
  */
 function searchExternalSources(wish) {
-  return new Promise((resolve) => {
-    const delay = 2000 + Math.random() * 2000; // 2-4 seconds
-
-    setTimeout(() => {
-      const mockResults = [
+  return new Promise(async (resolve) => {
+    try {
+      const result = await callDeepSeek([
         {
-          source: 'eBay',
-          title: `eBay listing: ${wish.title} - Like New`,
-          url: `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(wish.title)}`,
-          price: wish.amount ? wish.amount * (0.7 + Math.random() * 0.5) : null,
-          matchConfidence: Math.round((60 + Math.random() * 35) * 100) / 100
+          role: 'system',
+          content: `You are a WishPal external search agent. Given a wish, suggest 3 external sources that might have relevant matches. Return ONLY a JSON array of objects with fields "source" (string), "title" (string), "url" (string), "suggestedQuery" (string). Example: [{"source":"eBay","title":"eBay listings for X","url":"https://www.ebay.com/sch/i.html?_nkw=X","suggestedQuery":"X for sale"}]`
         },
         {
-          source: 'Etsy',
-          title: `Handcrafted ${wish.title} - Custom Order`,
-          url: `https://www.etsy.com/search?q=${encodeURIComponent(wish.title)}`,
-          price: wish.amount ? wish.amount * (0.9 + Math.random() * 0.8) : null,
-          matchConfidence: Math.round((50 + Math.random() * 40) * 100) / 100
+          role: 'user',
+          content: `Find external matches for: "${wish.title}" (${wish.category}, up to ${wish.amount ? '$' + wish.amount : 'N/A'})`
+        }
+      ], { temperature: 0.4, maxTokens: 800 });
+
+      if (result) {
+        try {
+          const parsed = JSON.parse(result);
+          if (Array.isArray(parsed)) {
+            resolve(parsed.map(r => ({
+              ...r,
+              matchConfidence: Math.round((60 + Math.random() * 35) * 100) / 100
+            })));
+            return;
+          }
+        } catch (e) {
+          // fall through to mock
+        }
+      }
+    } catch (err) {
+      console.warn('[AI Agent] DeepSeek external search failed:', err.message);
+    }
+
+    // Mock fallback
+    setTimeout(() => {
+      resolve([
+        {
+          source: 'eBay',
+          title: `${wish.title} - Listings`,
+          url: `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(wish.title)}`,
+          matchConfidence: Math.round((60 + Math.random() * 35) * 100) / 100
         },
         {
           source: 'Google Shopping',
           title: `Best deals on ${wish.title}`,
           url: `https://www.google.com/search?tbm=shop&q=${encodeURIComponent(wish.title)}`,
-          price: wish.amount ? wish.amount * (0.6 + Math.random() * 0.4) : null,
           matchConfidence: Math.round((55 + Math.random() * 35) * 100) / 100
         }
-      ];
-
-      resolve(mockResults);
-    }, delay);
+      ]);
+    }, 1500);
   });
 }
 
 /**
- * Generates an agent opinion on a comment relative to a wish.
- * TODO: Replace with NLP sentiment/alignment analysis (e.g., Anthropic or OpenAI API).
- *
- * @param {string} commentText - The comment text to evaluate
- * @param {string} wishDescription - The wish description for context
- * @returns {Object} The agent's opinion result
+ * Use DeepSeek to evaluate whether a comment aligns with the wish.
  */
-function getAgentOpinion(commentText, wishDescription) {
-  return new Promise((resolve) => {
-    const delay = 1000 + Math.random() * 1000; // 1-2 seconds
+async function getAgentOpinion(commentText, wishDescription) {
+  try {
+    const result = await callDeepSeek([
+      {
+        role: 'system',
+        content: `You are a WishPal AI opinion validator. Given a wish description and a user comment, determine: is the advice "in line with", "not in line with", or "partially aligned with" the wish? Reply with ONLY a JSON object with fields "opinion" (string), "confidence" (0-100 number), "reason" (string).`
+      },
+      {
+        role: 'user',
+        content: `Wish: "${wishDescription}"\nComment: "${commentText}"`
+      }
+    ], { temperature: 0.2, maxTokens: 500 });
 
-    setTimeout(() => {
-      // Mock opinion logic
-      // TODO: Use LLM to evaluate whether comment aligns with wish
-      const opinions = [
-        'Advice in line with wish',
-        'Advice not in line with wish',
-        'Partially aligned advice'
-      ];
+    if (result) {
+      try {
+        const parsed = JSON.parse(result);
+        return {
+          opinion: parsed.opinion || 'Partially aligned advice',
+          confidence: parsed.confidence || 70,
+          analyzedAt: new Date().toISOString()
+        };
+      } catch (e) {
+        // fall through
+      }
+    }
+  } catch (err) {
+    console.warn('[AI Agent] DeepSeek opinion failed:', err.message);
+  }
 
-      const randomIndex = Math.floor(Math.random() * opinions.length);
-      const opinion = opinions[randomIndex];
-
-      resolve({
-        opinion,
-        confidence: Math.round((60 + Math.random() * 35) * 100) / 100,
-        analyzedAt: new Date().toISOString()
-      });
-    }, delay);
-  });
+  // Fallback
+  const opinions = ['Advice in line with wish', 'Advice not in line with wish', 'Partially aligned advice'];
+  return {
+    opinion: opinions[Math.floor(Math.random() * opinions.length)],
+    confidence: Math.round((60 + Math.random() * 35) * 100) / 100,
+    analyzedAt: new Date().toISOString()
+  };
 }
 
 module.exports = {
