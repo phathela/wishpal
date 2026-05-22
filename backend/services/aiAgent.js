@@ -99,8 +99,9 @@ async function processWish(wish) {
     }
 
     // Search external if applicable
+    let externalResults = [];
     if (shouldSearchExternal(wish)) {
-      const externalResults = await searchExternalSources(wish);
+      externalResults = await searchExternalSources(wish);
       results.externalResults = externalResults;
       if (externalResults.length > 0) {
         results.logs.push({
