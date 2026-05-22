@@ -217,6 +217,7 @@ app.get('/api/debug', (req, res) => {
   const dbUrl = process.env.DATABASE_URL || '';
   const maskedUrl = dbUrl ? dbUrl.replace(/\/\/[^:]+:[^@]+@/, '//***:***@') : '(not set)';
   const isLocalHost = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
+  const sslDisabled = process.env.PG_NO_SSL === 'true';
 
   res.json({
     cwd: process.cwd(),
@@ -227,8 +228,9 @@ app.get('/api/debug', (req, res) => {
       url: maskedUrl,
       hasDbUrl: !!dbUrl,
       isLocalHost,
-      sslMode: isLocalHost ? 'disabled' : 'enabled (rejectUnauthorized: false)',
-      pgVersion: require('pg/package.json').version
+      sslMode: sslDisabled ? 'disabled (PG_NO_SSL=true)' : 'enabled (rejectUnauthorized: false)',
+      pgVersion: require('pg/package.json').version,
+      pgNoSsl: process.env.PG_NO_SSL
     }
   });
 });

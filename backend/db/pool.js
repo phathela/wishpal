@@ -4,10 +4,13 @@ let pool;
 
 if (process.env.DATABASE_URL) {
   // Production/real PostgreSQL
-  const isLocalHost = process.env.DATABASE_URL.includes('localhost') || process.env.DATABASE_URL.includes('127.0.0.1');
+  // Always use SSL with relaxed certificate validation for Railway and cloud hosts.
+  // Railway uses localhost internally but still requires SSL on the connection.
+  // For a truly local PostgreSQL without SSL, unset DATABASE_URL (uses pg-mem) or set PG_NO_SSL=true.
+  const sslDisabled = process.env.PG_NO_SSL === 'true';
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: isLocalHost ? false : { rejectUnauthorized: false },
+    ssl: sslDisabled ? false : { rejectUnauthorized: false },
     max: 5,
     connectionTimeoutMillis: 15000,
     idleTimeoutMillis: 60000,
