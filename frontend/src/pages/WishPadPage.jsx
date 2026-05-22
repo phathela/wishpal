@@ -24,7 +24,7 @@ export default function WishPadPage() {
       try {
         setLoading(true);
         const response = await apiClient.get(`/wishpad/b/${slug}`);
-        setWishpad(response.data.wishpad || response.data);
+        setWishpad(response.data.data || response.data.wishpad);
       } catch (err) {
         setError(err.response?.data?.error || 'WishPad not found');
       } finally {

@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
     }
     try {
       const response = await apiClient.get('/auth/me');
-      setUser(response.data.user || response.data);
+      setUser(response.data.data || response.data.user);
     } catch (error) {
       localStorage.removeItem('wishpal_token');
       localStorage.removeItem('wishpal_user');
@@ -31,7 +31,7 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const response = await apiClient.post('/auth/login', { email, password });
-    const { token, user: userData } = response.data;
+    const { token, user: userData } = response.data.data;
     localStorage.setItem('wishpal_token', token);
     localStorage.setItem('wishpal_user', JSON.stringify(userData));
     setUser(userData);
@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
       role,
       username,
     });
-    const { token, user: userData } = response.data;
+    const { token, user: userData } = response.data.data;
     localStorage.setItem('wishpal_token', token);
     localStorage.setItem('wishpal_user', JSON.stringify(userData));
     setUser(userData);

@@ -39,10 +39,10 @@ export default function Search() {
       if (filters.maxPrice) params.maxPrice = filters.maxPrice;
       if (filters.sort) params.sort = filters.sort;
 
-      const response = await apiClient.get('/wishes', { params });
-      const data = response.data;
-      setResults(data.wishes || data || []);
-      setTotal(data.total || data.length || 0);
+      const response = await apiClient.get('/search', { params });
+      const data = response.data.data;
+      setResults(data?.wishes || []);
+      setTotal(data?.pagination?.total || data?.length || 0);
     } catch (err) {
       console.error('Search error:', err);
       setResults([]);

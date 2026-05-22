@@ -52,7 +52,7 @@ export default function BuyWees() {
         currency: 'usd',
       });
 
-      const { clientSecret, paymentIntentId } = response.data;
+      const { clientSecret, paymentIntentId } = response.data.data;
 
       // For now, simulate success by marking the payment as completed
       // In production, this would use Stripe Elements or redirect to Stripe Checkout

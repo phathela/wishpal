@@ -98,7 +98,7 @@ export default function Profile() {
         keyword: newAlertKeyword,
         category: newAlertCategory || undefined,
       });
-      setAlerts((prev) => [...prev, response.data.alert || response.data]);
+      setAlerts((prev) => [...prev, response.data.data || response.data.alert]);
       setNewAlertKeyword('');
       setNewAlertCategory('');
     } catch (err) {
