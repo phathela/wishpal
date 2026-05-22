@@ -35,8 +35,8 @@ export default function Profile() {
           apiClient.get('/alerts').catch(() => null),
           apiClient.get('/payments/transactions').catch(() => null),
         ]);
-        if (alertsRes) setAlerts(alertsRes.data.alerts || alertsRes.data || []);
-        if (txRes) setTransactions(txRes.data.transactions || txRes.data || []);
+        if (alertsRes) setAlerts(alertsRes.data?.data?.alerts || []);
+        if (txRes) setTransactions(txRes.data?.data?.transactions || []);
       } catch (err) {
         console.error('Profile fetch error:', err);
       } finally {

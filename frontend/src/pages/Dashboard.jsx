@@ -25,10 +25,10 @@ export default function Dashboard() {
           apiClient.get('/agent-comments').catch(() => null),
           apiClient.get('/alerts').catch(() => null),
         ]);
-        if (wishesRes) setWishes(wishesRes.data.wishes || wishesRes.data || []);
-        if (matchesRes) setMatches(matchesRes.data.matches || matchesRes.data || []);
-        if (commentsRes) setAgentComments(commentsRes.data.comments || commentsRes.data || []);
-        if (alertsRes) setAlerts(alertsRes.data.alerts || alertsRes.data || []);
+        if (wishesRes) setWishes(wishesRes.data?.data?.wishes || []);
+        if (matchesRes) setMatches(matchesRes.data?.data?.matches || []);
+        if (commentsRes) setAgentComments(commentsRes.data?.data?.comments || []);
+        if (alertsRes) setAlerts(alertsRes.data?.data?.alerts || []);
       } else {
         const [statsRes, matchesRes, alertsRes] = await Promise.all([
           apiClient.get('/wishpad/stats').catch(() => null),
@@ -36,8 +36,8 @@ export default function Dashboard() {
           apiClient.get('/alerts').catch(() => null),
         ]);
         if (statsRes) setStats(statsRes.data);
-        if (matchesRes) setMatches(matchesRes.data.matches || matchesRes.data || []);
-        if (alertsRes) setAlerts(alertsRes.data.alerts || alertsRes.data || []);
+        if (matchesRes) setMatches(matchesRes.data?.data?.matches || []);
+        if (alertsRes) setAlerts(alertsRes.data?.data?.alerts || []);
       }
     } catch (err) {
       console.error('Dashboard fetch error:', err);
