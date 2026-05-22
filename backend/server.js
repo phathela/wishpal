@@ -231,7 +231,8 @@ app.use('/api/payments', paymentsRoutes);
 // ---------------------
 const frontendCandidates = [
   path.join(__dirname, 'public'),                    // backend/public/ (copy approach)
-  path.join(__dirname, '..', 'frontend', 'dist'),    // frontend/dist/ (direct Vite output)
+  path.join(__dirname, '..', 'frontend', 'dist'),    // frontend/dist/ (via __dirname)
+  path.join(process.cwd(), 'frontend', 'dist'),      // frontend/dist/ (via CWD for Railway)
 ];
 let publicDir = null;
 for (const dir of frontendCandidates) {
