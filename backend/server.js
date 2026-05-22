@@ -23,6 +23,7 @@ const agentWorker = require('./workers/agentWorker');
 
 // Import DB
 const pool = require('./db/pool');
+const { seedAdmin } = require('./db/seed');
 const fs = require('fs');
 
 /**
@@ -355,6 +356,7 @@ async function startServer() {
       await pool.query('SELECT 1');
       console.log('[WishPal] Database connected');
       await runMigrations();
+      await seedAdmin();
       break;
     } catch (err) {
       console.log(`[WishPal] Waiting for database... (${i + 1}/10)`);
