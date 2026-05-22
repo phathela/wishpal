@@ -4,11 +4,10 @@ let pool;
 
 if (process.env.DATABASE_URL) {
   // Production/real PostgreSQL
+  const isLocalHost = process.env.DATABASE_URL.includes('localhost') || process.env.DATABASE_URL.includes('127.0.0.1');
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL && (process.env.DATABASE_URL.includes('railway') || process.env.NODE_ENV === 'production')
-      ? { rejectUnauthorized: false }
-      : false,
+    ssl: isLocalHost ? false : { rejectUnauthorized: false },
     connectionTimeoutMillis: 10000,
     idleTimeoutMillis: 30000
   });
