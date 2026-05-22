@@ -314,4 +314,19 @@ process.on('SIGINT', async () => {
   });
 });
 
+// ---------------------
+// Process-level error handlers (prevent crashes on unhandled rejections)
+// ---------------------
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[Process] UNHANDLED PROMISE REJECTION:', reason instanceof Error ? reason.message : reason);
+  if (reason?.stack) console.error('[Process] Stack:', reason.stack);
+  // Don't exit - keep the server running
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('[Process] UNCAUGHT EXCEPTION:', err.message);
+  console.error(err.stack);
+  // Don't exit - keep the server running
+});
+
 module.exports = { app, server, io };

@@ -94,6 +94,8 @@ async function processPendingWishes() {
       // Process asynchronously - don't block the worker loop
       processSingleWish(wish).finally(() => {
         processingWishes.delete(wish.id);
+      }).catch(err => {
+        console.error(`[AgentWorker] Unhandled error processing wish #${wish.id}:`, err);
       });
     }
   } catch (err) {

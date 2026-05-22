@@ -8,12 +8,15 @@ if (process.env.DATABASE_URL) {
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: isLocalHost ? false : { rejectUnauthorized: false },
-    connectionTimeoutMillis: 10000,
-    idleTimeoutMillis: 30000
+    max: 5,
+    connectionTimeoutMillis: 15000,
+    idleTimeoutMillis: 60000,
+    allowExitOnIdle: false
   });
 
   pool.on('error', (err) => {
-    console.error('Unexpected error on idle client', err);
+    console.error('[DB] Unexpected error on idle client:', err?.message || err);
+    if (err?.stack) console.error('[DB] Stack:', err.stack);
   });
 } else {
   // Development: use pg-mem (in-memory PostgreSQL emulation)
