@@ -212,13 +212,95 @@ app.get('/api/debug', (req, res) => {
     hasIndex: fs.existsSync(path.join(dir, 'index.html')),
     contents: fs.existsSync(dir) ? fs.readdirSync(dir).slice(0, 20) : []
   }));
+
+  // Database connection diagnostic info
+  const dbUrl = process.env.DATABASE_URL || '';
+  const maskedUrl = dbUrl ? dbUrl.replace(/\/\/[^:]+:[^@]+@/, '//***:***@') : '(not set)';
+  const isLocalHost = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
+
   res.json({
     cwd: process.cwd(),
     __dirname: __dirname,
     checks,
-    nodeEnv: process.env.NODE_ENV
+    nodeEnv: process.env.NODE_ENV,
+    database: {
+      url: maskedUrl,
+      hasDbUrl: !!dbUrl,
+      isLocalHost,
+      sslMode: isLocalHost ? 'disabled' : 'enabled (rejectUnauthorized: false)',
+      pgVersion: require('pg/package.json').version
+    }
   });
 });
+
+// Database diagnostic endpoint - tests connection and returns full error details
+app.get('/api/debug/db', async (req, res) => {
+  const diagnostics = { poolState: {} };
+  try {
+    // Get pool stats (pg@8.13 has totalCount, idleCount, waitingCount)
+    if (pool.totalCount !== undefined) {
+      diagnostics.poolState = {
+        totalConnections: pool.totalCount,
+        idle: pool.idleCount,
+        waiting: pool.waitingCount
+      };
+    }
+    // Test pool.query
+    await pool.query('SELECT 1');
+    diagnostics.poolQuery = 'ok';
+  } catch (err) {
+    diagnostics.poolQuery = 'failed';
+    diagnostics.errorType = typeof err;
+    diagnostics.errorConstructor = err?.constructor?.name;
+    diagnostics.errorMessage = err?.message;
+    diagnostics.errorCode = err?.code;
+    diagnostics.hasStack = !!err?.stack;
+    diagnostics.errorKeys = err ? Object.keys(err) : [];
+
+    // Try direct new client connection
+    try {
+      const { Client } = require('pg');
+      const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+        connectionTimeoutMillis: 5000
+      });
+      await client.connect();
+      await client.query('SELECT 1');
+      diagnostics.directClient = 'ok';
+      await client.end();
+    } catch (directErr) {
+      diagnostics.directClient = 'failed';
+      diagnostics.directErrorType = typeof directErr;
+      diagnostics.directErrorMessage = directErr?.message;
+      diagnostics.directErrorCode = directErr?.code;
+      diagnostics.directErrorKeys = directErr ? Object.keys(directErr) : [];
+    }
+
+    // Try without SSL
+    try {
+      const { Client } = require('pg');
+      const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: false,
+        connectionTimeoutMillis: 5000
+      });
+      await client.connect();
+      await client.query('SELECT 1');
+      diagnostics.directNoSsl = 'ok';
+      await client.end();
+    } catch (directErr) {
+      diagnostics.directNoSsl = 'failed';
+      diagnostics.directNoSslError = directErr?.message;
+    }
+  }
+
+  // Log diagnostics to server console
+  console.error('[DB-DIAG] Full diagnostic result:', JSON.stringify(diagnostics, null, 2));
+
+  res.json(diagnostics);
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/wishes', wishesRoutes);
 app.use('/api/matches', matchesRoutes);
