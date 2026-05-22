@@ -217,6 +217,8 @@ app.get('/api/debug', (req, res) => {
   // Database connection diagnostic info
   const dbUrl = process.env.DATABASE_URL || '';
   const maskedUrl = dbUrl ? dbUrl.replace(/\/\/[^:]+:[^@]+@/, '//***:***@') : '(not set)';
+  const dbPubUrl = process.env.DATABASE_PUBLIC_URL || '';
+  const maskedPubUrl = dbPubUrl ? dbPubUrl.replace(/\/\/[^:]+:[^@]+@/, '//***:***@') : '(not set)';
   const isLocalHost = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
   const sslDisabled = process.env.PG_NO_SSL === 'true';
 
@@ -227,11 +229,22 @@ app.get('/api/debug', (req, res) => {
     nodeEnv: process.env.NODE_ENV,
     database: {
       url: maskedUrl,
+      publicUrl: maskedPubUrl,
       hasDbUrl: !!dbUrl,
       isLocalHost,
       sslMode: sslDisabled ? 'disabled (PG_NO_SSL=true)' : 'enabled (rejectUnauthorized: false)',
       pgVersion: require('pg/package.json').version,
-      pgNoSsl: process.env.PG_NO_SSL
+      pgNoSsl: process.env.PG_NO_SSL,
+      pgVars: {
+        pgUser: process.env.PGUSER ? '(set)' : '(not set)',
+        pgDatabase: process.env.PGDATABASE || '(not set)',
+        pgHost: process.env.PGHOST || '(not set)',
+        pgPort: process.env.PGPORT || '(not set)',
+        pgPassword: process.env.POSTGRES_PASSWORD ? '(set)' : '(not set)',
+        railwayPrivateDomain: process.env.RAILWAY_PRIVATE_DOMAIN || '(not set)',
+        railwayTcpProxyDomain: process.env.RAILWAY_TCP_PROXY_DOMAIN || '(not set)',
+        railwayTcpProxyPort: process.env.RAILWAY_TCP_PROXY_PORT || '(not set)'
+      }
     }
   });
 });

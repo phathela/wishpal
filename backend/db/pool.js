@@ -5,11 +5,34 @@ let pool;
 if (process.env.DATABASE_URL) {
   // Production/real PostgreSQL
   // Always use SSL with relaxed certificate validation for Railway and cloud hosts.
-  // Railway uses localhost internally but still requires SSL on the connection.
   // For a truly local PostgreSQL without SSL, unset DATABASE_URL (uses pg-mem) or set PG_NO_SSL=true.
   const sslDisabled = process.env.PG_NO_SSL === 'true';
+
+  // Resolve the actual database URL.
+  // Railway sometimes injects DATABASE_URL with localhost which doesn't work
+  // from the app service. Try DATABASE_PUBLIC_URL or construct from individual
+  // PG variables as fallback.
+  let connectionString = process.env.DATABASE_URL;
+  if (connectionString.includes('localhost') || connectionString.includes('127.0.0.1')) {
+    // Try DATABASE_PUBLIC_URL first
+    if (process.env.DATABASE_PUBLIC_URL) {
+      console.log('[DB] DATABASE_URL has localhost, using DATABASE_PUBLIC_URL instead');
+      connectionString = process.env.DATABASE_PUBLIC_URL;
+    } else if (process.env.RAILWAY_PRIVATE_DOMAIN && process.env.PGUSER && process.env.POSTGRES_PASSWORD) {
+      // Construct from Railway PG variables
+      const user = process.env.PGUSER;
+      const pass = process.env.POSTGRES_PASSWORD;
+      const host = process.env.RAILWAY_PRIVATE_DOMAIN;
+      const db = process.env.PGDATABASE || 'railway';
+      connectionString = `postgresql://${user}:${pass}@${host}:5432/${db}`;
+      console.log('[DB] Constructed DATABASE_URL from Railway PG variables');
+    }
+  }
+
+  console.log('[DB] Connecting to PostgreSQL at ' + connectionString.replace(/\/\/[^:]+:[^@]+@/, '//***:***@'));
+
   pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString,
     ssl: sslDisabled ? false : { rejectUnauthorized: false },
     max: 5,
     connectionTimeoutMillis: 15000,
