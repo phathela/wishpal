@@ -138,6 +138,7 @@ export default function Profile() {
     { id: 'password', label: 'Password' },
     { id: 'alerts', label: 'Alerts' },
     { id: 'transactions', label: 'Transactions' },
+    ...(user?.role === 'wishpad' ? [{ id: 'wishpad', label: 'WishPad Page' }] : []),
   ];
 
   return (
@@ -454,9 +455,220 @@ export default function Profile() {
                 )}
               </div>
             )}
+
+            {/* WishPad Page Editor */}
+            {activeTab === 'wishpad' && <WishPadPageEditor />}
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function WishPadPageEditor() {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [logoUrl, setLogoUrl] = useState('');
+  const [website, setWebsite] = useState('');
+  const [socialInstagram, setSocialInstagram] = useState('');
+  const [socialTwitter, setSocialTwitter] = useState('');
+  const [socialTiktok, setSocialTiktok] = useState('');
+  const [country, setCountry] = useState('');
+  const [region, setRegion] = useState('');
+  const [description, setDescription] = useState('');
+  const [saveMsg, setSaveMsg] = useState('');
+  const [saveError, setSaveError] = useState('');
+
+  useEffect(() => {
+    const fetchPage = async () => {
+      try {
+        setLoading(true);
+        const res = await apiClient.get('/wishpad/page');
+        const page = res.data?.data;
+        if (page) {
+          setLogoUrl(page.logo_url || '');
+          setWebsite(page.website || '');
+          setCountry(page.country || '');
+          setRegion(page.region || '');
+          setDescription(page.description || '');
+
+          let social = page.social_links_json;
+          if (typeof social === 'string') {
+            try { social = JSON.parse(social); } catch (e) { social = {}; }
+          }
+          if (social && typeof social === 'object') {
+            setSocialInstagram(social.instagram || '');
+            setSocialTwitter(social.twitter || '');
+            setSocialTiktok(social.tiktok || '');
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch WishPad page:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPage();
+  }, []);
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setSaveMsg('');
+    setSaveError('');
+    setSaving(true);
+    try {
+      const socialLinks = {};
+      if (socialInstagram) socialLinks.instagram = socialInstagram;
+      if (socialTwitter) socialLinks.twitter = socialTwitter;
+      if (socialTiktok) socialLinks.tiktok = socialTiktok;
+
+      await apiClient.put('/wishpad/page', {
+        logo_url: logoUrl || undefined,
+        website: website || undefined,
+        social_links_json: Object.keys(socialLinks).length > 0 ? socialLinks : undefined,
+        country: country || undefined,
+        region: region || undefined,
+        description: description || undefined,
+      });
+      setSaveMsg('WishPad page updated successfully!');
+    } catch (err) {
+      setSaveError(err.response?.data?.error || 'Failed to save WishPad page');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="flex justify-center py-8">
+          <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <h2 className="text-lg font-semibold text-gray-900 mb-2">WishPad Page Settings</h2>
+      <p className="text-sm text-gray-500 mb-6">Customize how your public WishPad page appears to visitors.</p>
+
+      {saveMsg && (
+        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-600">{saveMsg}</div>
+      )}
+      {saveError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">{saveError}</div>
+      )}
+
+      <form onSubmit={handleSave} className="space-y-5">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Logo URL</label>
+          <div className="flex items-center space-x-3">
+            {logoUrl && (
+              <img src={logoUrl} alt="Logo preview" className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            )}
+            <input
+              type="text"
+              value={logoUrl}
+              onChange={(e) => setLogoUrl(e.target.value)}
+              placeholder="https://example.com/logo.png"
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+          <input
+            type="text"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+            placeholder="https://yourbusiness.com"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Social Links</label>
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2">
+              <span className="text-pink-500 text-sm font-medium w-20">Instagram</span>
+              <input
+                type="text"
+                value={socialInstagram}
+                onChange={(e) => setSocialInstagram(e.target.value)}
+                placeholder="https://instagram.com/yourpage"
+                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-blue-400 text-sm font-medium w-20">Twitter / X</span>
+              <input
+                type="text"
+                value={socialTwitter}
+                onChange={(e) => setSocialTwitter(e.target.value)}
+                placeholder="https://twitter.com/yourpage"
+                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-gray-900 text-sm font-medium w-20">TikTok</span>
+              <input
+                type="text"
+                value={socialTiktok}
+                onChange={(e) => setSocialTiktok(e.target.value)}
+                placeholder="https://tiktok.com/@yourpage"
+                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+            <input
+              type="text"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              placeholder="e.g., United States"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Region / City</label>
+            <input
+              type="text"
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              placeholder="e.g., New York"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={4}
+            placeholder="Tell visitors what your business offers..."
+            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200 resize-none"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={saving}
+          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg px-6 py-2.5 transition-all duration-200 disabled:opacity-50"
+        >
+          {saving ? 'Saving...' : 'Save Page Settings'}
+        </button>
+      </form>
     </div>
   );
 }

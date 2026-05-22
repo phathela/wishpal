@@ -100,6 +100,12 @@ if (process.env.DATABASE_URL) {
       description TEXT,
       logo_url TEXT,
       contact_info TEXT,
+      website VARCHAR(255),
+      social_links_json TEXT DEFAULT '{}',
+      latitude NUMERIC,
+      longitude NUMERIC,
+      country VARCHAR(100),
+      region VARCHAR(100),
       created_at TIMESTAMP DEFAULT NOW()
     );
     CREATE TABLE IF NOT EXISTS alerts (

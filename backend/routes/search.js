@@ -19,6 +19,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
       location_region,
       min_amount,
       max_amount,
+      closing_soon,
       page = 1,
       limit = 20
     } = req.query;
@@ -102,6 +103,16 @@ router.get('/', optionalAuth, async (req, res, next) => {
         params.push(maxVal);
         paramIndex++;
       }
+    }
+
+    // Closing soon filter (expiring within 7 days)
+    if (closing_soon === 'true') {
+      const today = new Date().toISOString().split('T')[0];
+      const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      sql += ` AND w.expiry_date IS NOT NULL AND w.expiry_date >= $${paramIndex} AND w.expiry_date <= $${paramIndex + 1}`;
+      countSql += ` AND w.expiry_date IS NOT NULL AND w.expiry_date >= $${paramIndex} AND w.expiry_date <= $${paramIndex + 1}`;
+      params.push(today, sevenDaysFromNow);
+      paramIndex += 2;
     }
 
     // Check if user is authenticated as a WishPad

@@ -150,6 +150,56 @@ router.post('/', authenticate, [
 });
 
 /**
+ * POST /api/wishes/direct
+ * Submit a wish directly to a specific WishPad (by slug).
+ */
+router.post('/direct', authenticate, [
+  body('title').notEmpty().withMessage('Title is required'),
+  body('description').notEmpty().withMessage('Description is required'),
+  body('wishpadSlug').notEmpty().withMessage('WishPad slug is required')
+], async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: errors.array()[0].msg });
+    }
+
+    const userId = req.user.userId;
+    const { title, description, category, wishpadSlug } = req.body;
+
+    // Find the wishpad by slug
+    const wishpadResult = await pool.query(
+      'SELECT id, wishpad_user_id FROM wishpad_pages WHERE slug = $1',
+      [wishpadSlug]
+    );
+
+    if (wishpadResult.rows.length === 0) {
+      return res.status(404).json({ error: 'WishPad not found' });
+    }
+
+    const wishpadUserId = wishpadResult.rows[0].wishpad_user_id;
+
+    const result = await pool.query(
+      `INSERT INTO wishes (user_id, title, category, description, visible_to_wishpad_ids, status)
+       VALUES ($1, $2, $3, $4, $5, 'active')
+       RETURNING *`,
+      [userId, title, category || 'Other', description, [wishpadUserId]]
+    );
+
+    const wish = result.rows[0];
+
+    // Trigger agent processing
+    processWishAsync(wish, req.app.get('io'));
+
+    res.status(201).json({
+      data: sanitizeWish(wish)
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * GET /api/wishes/:id
  * Get a single wish by ID with its comments.
  */

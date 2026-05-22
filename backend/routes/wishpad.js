@@ -50,6 +50,12 @@ router.put('/page', authenticate, requireWishpad, [
   body('description').optional(),
   body('logo_url').optional(),
   body('contact_info').optional(),
+  body('website').optional(),
+  body('social_links_json').optional(),
+  body('latitude').optional().isFloat().withMessage('Latitude must be a number'),
+  body('longitude').optional().isFloat().withMessage('Longitude must be a number'),
+  body('country').optional(),
+  body('region').optional(),
   body('custom_branding_json').optional().isObject().withMessage('Branding must be a JSON object')
 ], async (req, res, next) => {
   try {
@@ -59,30 +65,19 @@ router.put('/page', authenticate, requireWishpad, [
     }
 
     const userId = req.user.userId;
-    const { description, logo_url, contact_info, custom_branding_json } = req.body;
+    const { description, logo_url, contact_info, website, social_links_json, latitude, longitude, country, region, custom_branding_json } = req.body;
 
     const updates = [];
     const values = [];
     let paramIndex = 1;
 
-    if (description !== undefined) {
-      updates.push(`description = $${paramIndex++}`);
-      values.push(description);
-    }
-
-    if (logo_url !== undefined) {
-      updates.push(`logo_url = $${paramIndex++}`);
-      values.push(logo_url);
-    }
-
-    if (contact_info !== undefined) {
-      updates.push(`contact_info = $${paramIndex++}`);
-      values.push(contact_info);
-    }
-
-    if (custom_branding_json !== undefined) {
-      updates.push(`custom_branding_json = $${paramIndex++}`);
-      values.push(JSON.stringify(custom_branding_json));
+    const fields = { description, logo_url, contact_info, website, social_links_json, latitude, longitude, country, region, custom_branding_json };
+    for (const [key, value] of Object.entries(fields)) {
+      if (value !== undefined) {
+        const dbKey = key === 'social_links_json' ? 'social_links_json' : key;
+        updates.push(`${dbKey} = $${paramIndex++}`);
+        values.push(key === 'custom_branding_json' ? JSON.stringify(value) : value);
+      }
     }
 
     if (updates.length === 0) {
@@ -363,6 +358,90 @@ router.put('/username', authenticate, requireWishpad, [
 });
 
 /**
+ * GET /api/wishpad/list
+ * Public endpoint listing all WishPads with basic info and map data.
+ */
+router.get('/list', async (req, res, next) => {
+  try {
+    const { country, region, page = 1, limit = 20 } = req.query;
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const limitNum = Math.min(50, Math.max(1, parseInt(limit, 10) || 20));
+    const offset = (pageNum - 1) * limitNum;
+
+    let sql = `
+      SELECT wp.id, wp.slug, wp.description, wp.logo_url, wp.country, wp.region,
+             wp.latitude, wp.longitude, wp.website, wp.social_links_json, wp.page_views,
+             u.display_name, u.username, u.avatar_url, u.id as user_id
+      FROM wishpad_pages wp
+      JOIN users u ON wp.wishpad_user_id = u.id
+      WHERE wp.slug IS NOT NULL
+    `;
+    let countSql = `SELECT COUNT(*) FROM wishpad_pages wp JOIN users u ON wp.wishpad_user_id = u.id WHERE wp.slug IS NOT NULL`;
+    const params = [];
+    let idx = 1;
+
+    if (country) {
+      sql += ` AND wp.country = $${idx}`;
+      countSql += ` AND wp.country = $${idx}`;
+      params.push(country);
+      idx++;
+    }
+    if (region) {
+      sql += ` AND wp.region = $${idx}`;
+      countSql += ` AND wp.region = $${idx}`;
+      params.push(region);
+      idx++;
+    }
+
+    const countResult = await pool.query(countSql, params);
+    const total = parseInt(countResult.rows[0].count, 10);
+
+    sql += ` ORDER BY wp.page_views DESC LIMIT $${idx} OFFSET $${idx + 1}`;
+    params.push(limitNum, offset);
+
+    const result = await pool.query(sql, params);
+
+    const wishpadsWithStats = await Promise.all(result.rows.map(async (row) => {
+      const matchCount = await pool.query(
+        'SELECT COUNT(*) FROM matches WHERE matched_to_user_id = $1 AND is_unlocked = true',
+        [row.user_id]
+      );
+      return {
+        id: row.id,
+        slug: row.slug,
+        name: row.display_name || row.username,
+        username: row.username,
+        description: row.description,
+        logo_url: row.logo_url,
+        avatar_url: row.avatar_url,
+        country: row.country,
+        region: row.region,
+        latitude: row.latitude ? parseFloat(row.latitude) : null,
+        longitude: row.longitude ? parseFloat(row.longitude) : null,
+        website: row.website,
+        social_links: row.social_links_json ? JSON.parse(row.social_links_json) : {},
+        page_views: row.page_views,
+        unlocked_matches: parseInt(matchCount.rows[0].count, 10)
+      };
+    }));
+
+    res.json({
+      data: {
+        wishpads: wishpadsWithStats,
+        pagination: {
+          total,
+          page: pageNum,
+          limit: limitNum,
+          total_pages: Math.ceil(total / limitNum)
+        }
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * GET /api/wishpad/b/:slug
  * Public route - get a WishPad's public page with basic info and active competitions.
  */
@@ -431,7 +510,13 @@ router.get('/b/:slug', optionalAuth, async (req, res, next) => {
           slug: page.slug,
           description: page.description,
           logo_url: page.logo_url,
-          page_views: page.page_views + 1, // including this view
+          website: page.website,
+          social_links_json: page.social_links_json,
+          latitude: page.latitude ? parseFloat(page.latitude) : null,
+          longitude: page.longitude ? parseFloat(page.longitude) : null,
+          country: page.country,
+          region: page.region,
+          page_views: page.page_views + 1,
           custom_branding_json: page.custom_branding_json
         },
         user: {

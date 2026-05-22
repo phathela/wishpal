@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import apiClient from '../api/client';
 
 export default function Register() {
   const { register } = useAuth();
@@ -13,6 +14,16 @@ export default function Register() {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // WishPad-specific fields
+  const [logoUrl, setLogoUrl] = useState('');
+  const [website, setWebsite] = useState('');
+  const [socialInstagram, setSocialInstagram] = useState('');
+  const [socialTwitter, setSocialTwitter] = useState('');
+  const [socialTiktok, setSocialTiktok] = useState('');
+  const [country, setCountry] = useState('');
+  const [region, setRegion] = useState('');
+  const [description, setDescription] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,6 +57,24 @@ export default function Register() {
     setLoading(true);
     try {
       await register(email, password, role, username || undefined);
+
+      // If WishPad, save the additional page fields
+      if (role === 'wishpad') {
+        const socialLinks = {};
+        if (socialInstagram) socialLinks.instagram = socialInstagram;
+        if (socialTwitter) socialLinks.twitter = socialTwitter;
+        if (socialTiktok) socialLinks.tiktok = socialTiktok;
+
+        await apiClient.put('/wishpad/page', {
+          logo_url: logoUrl || undefined,
+          website: website || undefined,
+          social_links_json: Object.keys(socialLinks).length > 0 ? socialLinks : undefined,
+          country: country || undefined,
+          region: region || undefined,
+          description: description || undefined,
+        });
+      }
+
       navigate('/dashboard');
     } catch (err) {
       const message =
@@ -105,22 +134,120 @@ export default function Register() {
           )}
 
           {role === 'wishpad' && (
-            <div className="mb-5">
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">
-                Username / Business Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="your-business-name"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-              />
-              <p className="mt-1 text-xs text-gray-400">
-                Premium usernames are available. This will be your public WishPad URL: wishpal.com/b/your-business-name
-              </p>
-            </div>
+            <>
+              <div className="mb-5">
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Username / Business Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="your-business-name"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                />
+                <p className="mt-1 text-xs text-gray-400">
+                  Premium usernames are available. This will be your public WishPad URL: wishpal.com/b/your-business-name
+                </p>
+              </div>
+
+              <div className="mb-5 p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg border border-purple-100">
+                <h3 className="text-sm font-semibold text-purple-700 mb-3">WishPad Page Details (Optional)</h3>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Logo URL</label>
+                  <input
+                    type="text"
+                    value={logoUrl}
+                    onChange={(e) => setLogoUrl(e.target.value)}
+                    placeholder="https://example.com/logo.png"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Website</label>
+                  <input
+                    type="text"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    placeholder="https://yourbusiness.com"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Social Links</label>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-pink-500 text-sm font-medium w-20">Instagram</span>
+                      <input
+                        type="text"
+                        value={socialInstagram}
+                        onChange={(e) => setSocialInstagram(e.target.value)}
+                        placeholder="https://instagram.com/yourpage"
+                        className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-blue-400 text-sm font-medium w-20">Twitter / X</span>
+                      <input
+                        type="text"
+                        value={socialTwitter}
+                        onChange={(e) => setSocialTwitter(e.target.value)}
+                        placeholder="https://twitter.com/yourpage"
+                        className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-gray-900 text-sm font-medium w-20">TikTok</span>
+                      <input
+                        type="text"
+                        value={socialTiktok}
+                        onChange={(e) => setSocialTiktok(e.target.value)}
+                        placeholder="https://tiktok.com/@yourpage"
+                        className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Country</label>
+                    <input
+                      type="text"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      placeholder="e.g., United States"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Region / City</label>
+                    <input
+                      type="text"
+                      value={region}
+                      onChange={(e) => setRegion(e.target.value)}
+                      placeholder="e.g., New York"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Business Description</label>
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                    placeholder="Tell visitors what your business offers..."
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-all duration-200 resize-none"
+                  />
+                </div>
+              </div>
+            </>
           )}
 
           <div className="mb-5">
