@@ -10,22 +10,33 @@ if (process.env.DATABASE_URL) {
 
   // Resolve the actual database URL.
   // Railway sometimes injects DATABASE_URL with localhost which doesn't work
-  // from the app service. Try DATABASE_PUBLIC_URL or construct from individual
-  // PG variables as fallback.
+  // from the app service. Try DATABASE_PUBLIC_URL, construct from individual
+  // PG variables, or parse credentials and try Railway internal hostnames.
   let connectionString = process.env.DATABASE_URL;
   if (connectionString.includes('localhost') || connectionString.includes('127.0.0.1')) {
     // Try DATABASE_PUBLIC_URL first
     if (process.env.DATABASE_PUBLIC_URL) {
       console.log('[DB] DATABASE_URL has localhost, using DATABASE_PUBLIC_URL instead');
       connectionString = process.env.DATABASE_PUBLIC_URL;
-    } else if (process.env.RAILWAY_PRIVATE_DOMAIN && process.env.PGUSER && process.env.POSTGRES_PASSWORD) {
-      // Construct from Railway PG variables
-      const user = process.env.PGUSER;
-      const pass = process.env.POSTGRES_PASSWORD;
-      const host = process.env.RAILWAY_PRIVATE_DOMAIN;
+    } else if (process.env.PGUSER && process.env.POSTGRES_PASSWORD) {
+      // Construct from Railway PG variables directly (bypassed DATABASE_URL entirely)
+      const host = process.env.RAILWAY_PRIVATE_DOMAIN || 'localhost';
       const db = process.env.PGDATABASE || 'railway';
-      connectionString = `postgresql://${user}:${pass}@${host}:5432/${db}`;
-      console.log('[DB] Constructed DATABASE_URL from Railway PG variables');
+      connectionString = `postgresql://${process.env.PGUSER}:${process.env.POSTGRES_PASSWORD}@${host}:5432/${db}`;
+      console.log('[DB] Constructed DATABASE_URL from PG variables, host=' + host);
+    } else {
+      // Parse credentials from the localhost URL and try Railway internal names
+      // The auto-injected DATABASE_URL has correct user/pass/db but wrong host
+      const parsed = connectionString.match(/^postgresql:\/\/([^:]+):([^@]+)@localhost:5432\/(.+)$/);
+      if (parsed) {
+        const [, user, pass, db] = parsed;
+        // Try the standard Railway PostgreSQL service hostname
+        const railwayDbHost = 'postgres.railway.internal';
+        connectionString = `postgresql://${user}:${pass}@${railwayDbHost}:5432/${db}`;
+        console.log('[DB] Parsed credentials from DATABASE_URL, retargeting to ' + railwayDbHost);
+      } else {
+        console.log('[DB] Could not parse DATABASE_URL, trying with localhost as-is');
+      }
     }
   }
 
