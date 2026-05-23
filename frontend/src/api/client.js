@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+const backendUrl =
+  import.meta.env.VITE_BACKEND_URL ||
+  (typeof window !== 'undefined' && window.__BACKEND_URL__) ||
+  '';
+
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: `${backendUrl}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
