@@ -72,6 +72,18 @@ const dummyWishpads = [
   { id: 'd13', slug: 'singapore-serv', name: 'Singapore Serv', username: 'singaporeserv', description: 'Trusted service providers in Singapore. Fast, efficient, reliable.', logo_url: '', country: 'Singapore', region: 'Singapore', latitude: 1.3521, longitude: 103.8198, website: 'https://singaporeserv.sg', social_links: {}, page_views: 13500, unlocked_matches: 311 },
   { id: 'd14', slug: 'lagos-solutions', name: 'Lagos Solutions', username: 'lagossolutions', description: 'Connecting Lagos residents with verified service providers.', logo_url: '', country: 'Nigeria', region: 'Lagos', latitude: 6.5244, longitude: 3.3792, website: '', social_links: {}, page_views: 5900, unlocked_matches: 143 },
   { id: 'd15', slug: 'mexico-ayuda', name: 'México Ayuda', username: 'mexicoayuda', description: 'Servicios profesionales en la Ciudad de México.', logo_url: '', country: 'Mexico', region: 'Mexico City', latitude: 19.4326, longitude: -99.1332, website: '', social_links: {}, page_views: 8200, unlocked_matches: 190 },
+  // Corporate WishPads
+  { id: 'd16', slug: 'bmw-rsa', name: 'BMW RSA', username: 'bmwrsa', description: 'Bayerische Motoren Werke — South Africa. Premium automotive manufacturer and mobility provider. Target Sale: 10,000 Global Units.', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg', country: 'South Africa', region: 'Johannesburg', latitude: -26.2041, longitude: 28.0473, website: 'https://www.bmw.com', social_links: { instagram: 'https://instagram.com/bmw' }, page_views: 250000, unlocked_matches: 14, wishes: 100, followers: 10000, target: 'Target Sale: 10,000 Global Units' },
+  { id: 'd17', slug: 'ibm-sa', name: 'IBM South Africa', username: 'ibmsa', description: 'Global technology and consulting leader. Enterprise AI, cloud, and infrastructure solutions. Target: 5,000 Enterprise Solutions.', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg', country: 'South Africa', region: 'Johannesburg', latitude: -26.2041, longitude: 28.0473, website: 'https://www.ibm.com', social_links: {}, page_views: 185000, unlocked_matches: 8, wishes: 75, followers: 8500, target: 'Target: 5,000 Enterprise Solutions' },
+  { id: 'd18', slug: 'vodacom', name: 'Vodacom', username: 'vodacom', description: 'Leading mobile communications company in South Africa. Connecting millions. Target: 1 Million New Subscribers.', logo_url: 'https://upload.wikimedia.org/wikipedia/en/5/58/Vodacom_logo.svg', country: 'South Africa', region: 'Midrand', latitude: -25.9987, longitude: 28.1253, website: 'https://www.vodacom.com', social_links: { twitter: 'https://twitter.com/Vodacom' }, page_views: 320000, unlocked_matches: 25, wishes: 200, followers: 25000, target: 'Target: 1M New Subscribers' },
+  { id: 'd19', slug: 'apple-inc', name: 'Apple Inc.', username: 'apple', description: 'Designing the world\'s most innovative technology products. iPhone, Mac, iPad, and services.', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg', country: 'United States', region: 'Cupertino', latitude: 37.3349, longitude: -122.009, website: 'https://www.apple.com', social_links: {}, page_views: 890000, unlocked_matches: 52, wishes: 350, followers: 120000, target: 'Target: 50M Units Q2' },
+  { id: 'd20', slug: 'google-llc', name: 'Google', username: 'google', description: 'Organizing the world\'s information. Search, cloud, AI, and advertising solutions.', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg', country: 'United States', region: 'Mountain View', latitude: 37.422, longitude: -122.084, website: 'https://www.google.com', social_links: {}, page_views: 950000, unlocked_matches: 67, wishes: 500, followers: 200000, target: 'Target: 100M Active Users' },
+  { id: 'd21', slug: 'tesla-motors', name: 'Tesla', username: 'tesla', description: 'Accelerating the world\'s transition to sustainable energy. Electric vehicles, solar, and energy storage.', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg', country: 'United States', region: 'Austin', latitude: 30.2672, longitude: -97.7431, website: 'https://www.tesla.com', social_links: {}, page_views: 780000, unlocked_matches: 34, wishes: 280, followers: 95000, target: 'Target: 2M Vehicles Delivered' },
+  // Celebrity WishPads
+  { id: 'd22', slug: 'drake-ovo', name: 'Drake (OVO Sound)', username: 'drake', description: 'Aubrey Drake Graham — 5x Grammy Award-winning artist, rapper, singer, songwriter, and entrepreneur. OVO Sound founder. Target: 1,000,000 Album Sales.', logo_url: '', country: 'Canada', region: 'Toronto', latitude: 43.6532, longitude: -79.3832, website: 'https://www.drakeofficial.com', social_links: { instagram: 'https://instagram.com/champagnepapi', twitter: 'https://twitter.com/drake' }, page_views: 5200000, unlocked_matches: 6, wishes: 50, followers: 5000000, target: 'Target: 1,000,000 Album Sales' },
+  { id: 'd23', slug: 'beyonce', name: 'Beyoncé', username: 'beyonce', description: 'Global icon, 28x Grammy winner, singer, songwriter, and businesswoman. Parkwood Entertainment founder. Target: 2,000,000 Album Streams.', logo_url: '', country: 'United States', region: 'Houston', latitude: 29.7604, longitude: -95.3698, website: 'https://www.beyonce.com', social_links: { instagram: 'https://instagram.com/beyonce' }, page_views: 4800000, unlocked_matches: 9, wishes: 65, followers: 4200000, target: 'Target: 2,000,000 Album Streams' },
+  { id: 'd24', slug: 'nike-global', name: 'Nike', username: 'nike', description: 'Global leader in athletic footwear, apparel, and equipment. Just Do It. Target: 10M Units This Quarter.', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg', country: 'United States', region: 'Beaverton', latitude: 45.5152, longitude: -122.6784, website: 'https://www.nike.com', social_links: {}, page_views: 680000, unlocked_matches: 41, wishes: 310, followers: 150000, target: 'Target: 10M Units This Quarter' },
+  { id: 'd25', slug: 'samsung-global', name: 'Samsung', username: 'samsung', description: 'Global technology powerhouse. Consumer electronics, semiconductors, and digital solutions.', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg', country: 'South Korea', region: 'Seoul', latitude: 37.5665, longitude: 126.978, website: 'https://www.samsung.com', social_links: {}, page_views: 590000, unlocked_matches: 38, wishes: 270, followers: 110000, target: 'Target: 20M Devices Shipped' },
 ];
 
 const dummyWishes = [
@@ -93,6 +105,13 @@ const dummyWishes = [
   { id: 'dw16', title: 'Need a car mechanic for brake replacement', category: 'Repairs', expiry_date: new Date(Date.now() + 2 * 86400000).toISOString(), location_country: 'United States', description: 'Brake pads need urgent replacement. Prefer a mobile mechanic visiting Brooklyn.' },
   { id: 'dw17', title: 'Looking for freelance content writer', category: 'Jobs', expiry_date: new Date(Date.now() + 11 * 86400000).toISOString(), location_country: 'United Kingdom', description: 'Need a tech-savvy content writer for blog posts and website copy. Remote work OK.' },
   { id: 'dw18', title: 'Searching for a wedding photographer', category: 'Services', expiry_date: new Date(Date.now() + 60 * 86400000).toISOString(), location_country: 'Italy', description: 'Need a professional wedding photographer for June 2026 in Tuscany.' },
+  { id: 'dw19', title: 'Looking for a BMW X5 test drive in Johannesburg', category: 'Vehicles', expiry_date: new Date(Date.now() + 7 * 86400000).toISOString(), location_country: 'South Africa', description: 'Want to test drive the new BMW X5 at Auto Bavaria Johannesburg.' },
+  { id: 'dw20', title: 'Need cloud migration consulting for my business', category: 'Services', expiry_date: new Date(Date.now() + 30 * 86400000).toISOString(), location_country: 'South Africa', description: 'Looking for IBM-certified cloud architects to help migrate our infrastructure.' },
+  { id: 'dw21', title: 'Want the new Drake album signed copy', category: 'Items', expiry_date: new Date(Date.now() + 14 * 86400000).toISOString(), location_country: 'Canada', description: 'Looking for a signed limited edition of Drake\'s latest album release.' },
+  { id: 'dw22', title: 'Need Vodacom fibre installation at home', category: 'Services', expiry_date: new Date(Date.now() + 5 * 86400000).toISOString(), location_country: 'South Africa', description: 'Want to switch to Vodacom fibre. Need installation and setup in Midrand.' },
+  { id: 'dw23', title: 'Looking for iPhone 16 Pro Max deals', category: 'Items', expiry_date: new Date(Date.now() + 10 * 86400000).toISOString(), location_country: 'United States', description: 'Want the best price on iPhone 16 Pro Max 256GB. Any color.' },
+  { id: 'dw24', title: 'Need a Tesla Model Y rental for weekend trip', category: 'Vehicles', expiry_date: new Date(Date.now() + 3 * 86400000).toISOString(), location_country: 'United States', description: 'Want to rent a Tesla Model Y for a weekend trip from Austin.' },
+  { id: 'dw25', title: 'Looking for Nike Air Jordan limited restock', category: 'Items', expiry_date: new Date(Date.now() + 4 * 86400000).toISOString(), location_country: 'United States', description: 'Looking for the latest Air Jordan Retro release in size 10.' },
 ];
 
 const dummyClosingSoon = [
@@ -129,6 +148,22 @@ export default function Landing() {
   // Filter states
   const [filterCountry, setFilterCountry] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
+
+  // Tab-based filter state for Top WishPads
+  const [wpFilterTab, setWpFilterTab] = useState('area');
+  const [wpAreaFilter, setWpAreaFilter] = useState('');
+  const [wpCategoryFilter, setWpCategoryFilter] = useState('');
+  const [wpTypeSearch, setWpTypeSearch] = useState('');
+  const [wpAgentQuery, setWpAgentQuery] = useState('');
+  const [wpAgentResult, setWpAgentResult] = useState('');
+
+  // Tab-based filter state for Wishes
+  const [wFilterTab, setWFilterTab] = useState('area');
+  const [wAreaFilter, setWAreaFilter] = useState('');
+  const [wCategoryFilter, setWCategoryFilter] = useState('');
+  const [wTypeSearch, setWTypeSearch] = useState('');
+  const [wAgentQuery, setWAgentQuery] = useState('');
+  const [wAgentResult, setWAgentResult] = useState('');
 
   // Live stats pop-out
   const [showStats, setShowStats] = useState(false);
@@ -236,15 +271,166 @@ export default function Landing() {
     }
   };
 
-  // Filter wishpads for map
+  // Shared filter tabs for WishPads and Wishes
+  const renderFilterTabs = (isWp) => {
+    const state = isWp
+      ? { tab: wpFilterTab, setTab: setWpFilterTab, area: wpAreaFilter, setArea: setWpAreaFilter, cat: wpCategoryFilter, setCat: setWpCategoryFilter, search: wpTypeSearch, setSearch: setWpTypeSearch, query: wpAgentQuery, setQuery: setWpAgentQuery, result: wpAgentResult, setResult: setWpAgentResult }
+      : { tab: wFilterTab, setTab: setWFilterTab, area: wAreaFilter, setArea: setWAreaFilter, cat: wCategoryFilter, setCat: setWCategoryFilter, search: wTypeSearch, setSearch: setWTypeSearch, query: wAgentQuery, setQuery: setWAgentQuery, result: wAgentResult, setResult: setWAgentResult };
+
+    const tabs = [
+      { id: 'area', label: 'Explore by Area' },
+      { id: 'category', label: 'Explore by Category' },
+      { id: 'type', label: 'Explore by Type' },
+      { id: 'agent', label: 'Agent WishPal' },
+    ];
+
+    const handleAgentSubmit = () => {
+      if (!state.query.trim()) return;
+      state.setResult(`🔍 AI Agent is searching for "${state.query}"... This feature will connect you with matched ${isWp ? 'WishPads' : 'wishes'} based on your natural language request.`);
+    };
+
+    return (
+      <div className="mb-6">
+        {/* Tab Buttons */}
+        <div className="flex flex-wrap gap-1 mb-4">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => state.setTab(tab.id)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                state.tab === tab.id
+                  ? 'bg-purple-600 text-white shadow-md'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab Content */}
+        {state.tab === 'area' && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-medium text-gray-500">Filter by country:</span>
+            <select
+              value={state.area}
+              onChange={(e) => state.setArea(e.target.value)}
+              className="text-sm border border-gray-200 rounded-lg px-3 py-2 text-gray-600 bg-white focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="">All Countries</option>
+              {[...new Set(wishpads.map(w => w.country).filter(Boolean))].sort().map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            {state.area && (
+              <button onClick={() => state.setArea('')} className="text-xs text-purple-600 hover:underline">Clear</button>
+            )}
+          </div>
+        )}
+
+        {state.tab === 'category' && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-medium text-gray-500">Filter by category:</span>
+            <div className="flex flex-wrap gap-1.5">
+              {['Jobs', 'Services', 'Items', 'Vehicles', 'Houses', 'Cleaning', 'Repairs', 'Other'].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => state.setCat(state.cat === cat ? '' : cat)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                    state.cat === cat
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {state.tab === 'type' && (
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              value={state.search}
+              onChange={(e) => state.setSearch(e.target.value)}
+              placeholder={`Search ${isWp ? 'WishPads by name, description...' : 'wishes by title, description...'}`}
+              className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-purple-500"
+            />
+            {state.search && (
+              <button onClick={() => state.setSearch('')} className="text-xs text-purple-600 hover:underline">Clear</button>
+            )}
+          </div>
+        )}
+
+        {state.tab === 'agent' && (
+          <div>
+            <div className="flex items-start gap-2">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-sm flex-shrink-0">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <textarea
+                  value={state.query}
+                  onChange={(e) => state.setQuery(e.target.value)}
+                  placeholder={`Describe what you're looking for... e.g., "Find me ${isWp ? 'reliable WishPads in Johannesburg that can help with home services' : 'job opportunities in tech with remote work options'}"`}
+                  className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-purple-500 resize-none"
+                  rows={2}
+                />
+                <div className="flex justify-between items-center mt-1.5">
+                  <span className="text-xs text-gray-400">Powered by WishPal AI Agent</span>
+                  <button
+                    onClick={handleAgentSubmit}
+                    disabled={!state.query.trim()}
+                    className="px-4 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-semibold rounded-lg hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Search with AI →
+                  </button>
+                </div>
+              </div>
+            </div>
+            {state.result && (
+              <div className="mt-3 p-3 bg-purple-50 rounded-lg border border-purple-100 text-sm text-purple-800">
+                {state.result}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Filter wishpads based on active tab
   const filteredWishpads = wishpads.filter(w => {
     if (filterCountry && w.country !== filterCountry) return false;
     return true;
   });
 
-  const topWishpads = [...wishpads]
+  // Tab-filtered wishpads for Top WishPads section
+  const tabFilteredWishpads = wishpads.filter(w => {
+    if (wpAreaFilter && w.country !== wpAreaFilter) return false;
+    if (wpCategoryFilter && w.category !== wpCategoryFilter) return false;
+    if (wpTypeSearch && !w.name?.toLowerCase().includes(wpTypeSearch.toLowerCase()) && !w.description?.toLowerCase().includes(wpTypeSearch.toLowerCase())) return false;
+    return true;
+  });
+
+  const topWishpads = [...tabFilteredWishpads]
     .sort((a, b) => (b.unlocked_matches || 0) - (a.unlocked_matches || 0))
     .slice(0, 8);
+
+  // Tab-filtered wishes for Notice Board
+  const tabFilteredWishes = recentWishes.filter(w => {
+    if (wAreaFilter && w.location_country !== wAreaFilter) return false;
+    if (wCategoryFilter && w.category !== wCategoryFilter) return false;
+    if (wTypeSearch && !w.title?.toLowerCase().includes(wTypeSearch.toLowerCase()) && !w.description?.toLowerCase().includes(wTypeSearch.toLowerCase())) return false;
+    return true;
+  });
 
   const getDaysLeft = (expiryDate) => {
     if (!expiryDate) return null;
@@ -456,7 +642,7 @@ export default function Landing() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* LEFT: NOTICE BOARD */}
           <div>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
                 <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                 <span>{t('noticeBoard.title')}</span>
@@ -465,6 +651,10 @@ export default function Landing() {
                 {t('noticeBoard.viewAll')} →
               </Link>
             </div>
+
+            {/* Filter Tabs for Wishes */}
+            {renderFilterTabs(false)}
+
             <div
               ref={scrollRef}
               className="h-[480px] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-300"
@@ -473,13 +663,13 @@ export default function Landing() {
                 <div className="flex items-center justify-center h-full">
                   <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
                 </div>
-              ) : recentWishes.length === 0 ? (
+              ) : tabFilteredWishes.length === 0 ? (
                 <div className="flex items-center justify-center h-full text-gray-400">
                   <p>{t('noticeBoard.empty')}</p>
                 </div>
               ) : (
                 <div className="p-4 space-y-3">
-                  {recentWishes.map((wish) => {
+                  {tabFilteredWishes.map((wish) => {
                     const daysLeft = getDaysLeft(wish.expiry_date);
                     const catColor = categoryColors[wish.category] || '#6b7280';
                     return (
@@ -642,136 +832,70 @@ export default function Landing() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {/* For Ordinary Users (Individuals) */}
+            {/* Individuals */}
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
               <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-5">
                 <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-bold text-white">{t('features.individuals.title')}</h3>
               </div>
-              <div className="p-6 space-y-5">
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.individuals.benefit1')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.individuals.benefit1Desc')}</p>
+              <div className="p-6 space-y-2.5">
+                {[1,2,3,4,5].map((n) => (
+                  <div key={n} className="flex items-center space-x-3 p-2.5 rounded-lg bg-blue-50/50 hover:bg-blue-100/80 transition-colors">
+                    <span className="w-7 h-7 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0">{n}</span>
+                    <p className="font-semibold text-gray-900 text-sm">{t(`features.individuals.benefit${n}`)}</p>
                   </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.individuals.benefit2')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.individuals.benefit2Desc')}</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.individuals.benefit3')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.individuals.benefit3Desc')}</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.individuals.benefit4')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.individuals.benefit4Desc')}</p>
-                  </div>
-                </div>
-                <Link to="/benefits#individuals" className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200">
+                ))}
+                <Link to="/benefits#individuals" className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200 pt-1">
                   {t('features.individuals.more')}
                 </Link>
               </div>
             </div>
 
-            {/* For Businesses */}
+            {/* Businesses */}
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
               <div className="bg-gradient-to-r from-emerald-500 to-green-600 px-6 py-5">
                 <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-bold text-white">{t('features.businesses.title')}</h3>
               </div>
-              <div className="p-6 space-y-5">
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.businesses.benefit1')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.businesses.benefit1Desc')}</p>
+              <div className="p-6 space-y-2.5">
+                {[1,2,3,4,5].map((n) => (
+                  <div key={n} className="flex items-center space-x-3 p-2.5 rounded-lg bg-emerald-50/50 hover:bg-emerald-100/80 transition-colors">
+                    <span className="w-7 h-7 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0">{n}</span>
+                    <p className="font-semibold text-gray-900 text-sm">{t(`features.businesses.benefit${n}`)}</p>
                   </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.businesses.benefit2')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.businesses.benefit2Desc')}</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.businesses.benefit3')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.businesses.benefit3Desc')}</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.businesses.benefit4')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.businesses.benefit4Desc')}</p>
-                  </div>
-                </div>
-                <Link to="/benefits#businesses" className="inline-flex items-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors duration-200">
+                ))}
+                <Link to="/benefits#businesses" className="inline-flex items-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors duration-200 pt-1">
                   {t('features.businesses.more')}
                 </Link>
               </div>
             </div>
 
-            {/* For NGOs */}
+            {/* NGOs */}
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
               <div className="bg-gradient-to-r from-purple-500 to-pink-600 px-6 py-5">
                 <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-3">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-bold text-white">{t('features.ngos.title')}</h3>
               </div>
-              <div className="p-6 space-y-5">
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.ngos.benefit1')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.ngos.benefit1Desc')}</p>
+              <div className="p-6 space-y-2.5">
+                {[1,2,3,4,5].map((n) => (
+                  <div key={n} className="flex items-center space-x-3 p-2.5 rounded-lg bg-purple-50/50 hover:bg-purple-100/80 transition-colors">
+                    <span className="w-7 h-7 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0">{n}</span>
+                    <p className="font-semibold text-gray-900 text-sm">{t(`features.ngos.benefit${n}`)}</p>
                   </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.ngos.benefit2')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.ngos.benefit2Desc')}</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.ngos.benefit3')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.ngos.benefit3Desc')}</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t('features.ngos.benefit4')}</p>
-                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.ngos.benefit4Desc')}</p>
-                  </div>
-                </div>
-                <Link to="/benefits#ngos" className="inline-flex items-center text-sm font-semibold text-purple-600 hover:text-purple-700 transition-colors duration-200">
+                ))}
+                <Link to="/benefits#ngos" className="inline-flex items-center text-sm font-semibold text-purple-600 hover:text-purple-700 transition-colors duration-200 pt-1">
                   {t('features.ngos.more')}
                 </Link>
               </div>
@@ -783,12 +907,15 @@ export default function Landing() {
       {/* ═══════════════ TOP WISHPADS ═══════════════ */}
       <section id="top-wishpads" className={`bg-gradient-to-b ${currentTheme.section} py-16`}>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">{t('topWishpads.title')}</h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
               {t('topWishpads.subtitle')}
             </p>
           </div>
+
+          {/* Filter Tabs for WishPads */}
+          {renderFilterTabs(true)}
 
           {loadingWishpads ? (
             <div className="flex justify-center py-12">
@@ -802,34 +929,85 @@ export default function Landing() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {topWishpads.map((wp) => (
-                <Link
+                <div
                   key={wp.id}
-                  to={`/b/${wp.slug}`}
-                  className={`group bg-white rounded-xl border border-gray-200 p-5 hover:shadow-xl ${currentTheme.card} hover:-translate-y-1 transition-all duration-300`}
+                  className="group bg-white rounded-xl border border-gray-200 p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center">
-                    {wp.logo_url ? (
-                      <img src={wp.logo_url} alt={wp.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-2xl font-bold text-purple-600">
-                        {wp.name?.charAt(0)?.toUpperCase() || 'W'}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-semibold text-gray-900 text-center group-hover:text-purple-600 transition-colors duration-200 truncate">
-                    {wp.name}
-                  </h3>
-                  {wp.country && (
-                    <p className="text-xs text-gray-400 text-center mt-1">{wp.country}</p>
+                  {/* Logo + Name Row */}
+                  <Link to={`/b/${wp.slug}`} className="flex items-center space-x-3 mb-3">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center flex-shrink-0 ring-1 ring-gray-200">
+                      {wp.logo_url ? (
+                        <img src={wp.logo_url} alt={wp.name} className="w-full h-full object-contain p-1" />
+                      ) : (
+                        <span className="text-lg font-bold text-purple-600">
+                          {wp.name?.charAt(0)?.toUpperCase() || 'W'}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors truncate text-sm">
+                        {wp.name}
+                      </h3>
+                      {wp.country && (
+                        <p className="text-xs text-gray-400 truncate">{wp.country}</p>
+                      )}
+                    </div>
+                  </Link>
+
+                  {/* Target / Wish */}
+                  {wp.target && (
+                    <p className="text-xs font-semibold text-purple-700 bg-purple-50 rounded-lg px-2.5 py-1.5 mb-3 text-center border border-purple-100">
+                      {wp.target}
+                    </p>
                   )}
-                  <div className="flex items-center justify-center mt-3 space-x-1">
-                    <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
-                      {wp.unlocked_matches || 0} {t('topWishpads.matches')}
-                    </span>
+
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-3 gap-2 text-center border-t border-gray-100 pt-3 mb-3">
+                    <div>
+                      <p className="text-sm font-bold text-gray-900">{wp.wishes || 0}</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Wishes</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-900">{wp.unlocked_matches || 0}</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Matches</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-900">{(wp.followers || 0).toLocaleString()}</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Followers</p>
+                    </div>
                   </div>
-                </Link>
+
+                  {/* Link + Wish ID */}
+                  <div className="border-t border-gray-100 pt-2.5 space-y-1.5">
+                    {wp.website && (
+                      <a
+                        href={wp.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center space-x-1.5 text-xs text-blue-600 hover:text-blue-700 hover:underline group/link"
+                      >
+                        <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <span className="truncate">{wp.website.replace(/^https?:\/\//, '')}</span>
+                      </a>
+                    )}
+                    <div className="flex items-center space-x-1.5 text-xs text-gray-400">
+                      <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                      <span className="truncate">
+                        <span className="text-gray-400">ID: </span>
+                        <Link to={`/b/${wp.slug}`} className="text-purple-600 hover:text-purple-700 hover:underline">
+                          {window.location.hostname}/b/{wp.slug}
+                        </Link>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           )}
