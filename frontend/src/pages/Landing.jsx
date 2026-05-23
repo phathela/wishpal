@@ -188,7 +188,8 @@ export default function Landing() {
       try {
         const res = await apiClient.get('/wishpad/list?limit=50');
         const list = res.data?.data?.wishpads || [];
-        setWishpads(list.length > 0 ? list : dummyWishpads);
+        // Always merge with dummy showcase data so corporate/celebrity WishPads appear
+        setWishpads(list.length > 0 ? [...list, ...dummyWishpads] : dummyWishpads);
       } catch (err) {
         setWishpads(dummyWishpads);
       } finally {
