@@ -1,11 +1,30 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
+import ThemeSwitcher from './ThemeSwitcher';
+
+function WishPalLogo({ size = 32, showText = true }) {
+  const boxSize = size;
+  const textSize = Math.round(size * 0.58);
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: showText ? '6px' : '0', lineHeight: 1 }}>
+      <svg width={boxSize} height={boxSize} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+        <rect width="32" height="32" rx="7" fill="#3B82F6" />
+        <path d="M8 10l4 12 4-12 4 12 4-12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      </svg>
+      {showText && <span style={{ fontWeight: 700, fontSize: textSize, color: '#1F2937', letterSpacing: '-0.3px' }}>WishPal</span>}
+    </span>
+  );
+}
 
 export default function Navbar() {
   const { user, logout, weesBalance } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const { t } = useLanguage();
 
   const handleLogout = () => {
     logout();
@@ -19,12 +38,12 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { to: '/', label: 'Home' },
-    { to: '/search', label: 'Search' },
+    { to: '/', label: t('navbar.home') || 'Home' },
+    { to: '/search', label: t('navbar.search') || 'Search' },
   ];
 
   if (user) {
-    navLinks.push({ to: '/dashboard', label: 'Dashboard' });
+    navLinks.push({ to: '/dashboard', label: t('navbar.dashboard') || 'Dashboard' });
   }
 
   return (
@@ -32,8 +51,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <Link to="/" className="flex items-center space-x-2">
-            <span className="text-2xl">✨</span>
-            <span className="text-xl font-bold text-gray-900">WishPal</span>
+            <WishPalLogo size={28} />
           </Link>
 
           {/* Desktop nav */}
@@ -50,7 +68,10 @@ export default function Navbar() {
           </div>
 
           {/* Desktop right side */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-2">
+            <LanguageSwitcher />
+            <ThemeSwitcher />
+            <div className="w-px h-6 bg-gray-200 mx-1" />
             {user ? (
               <>
                 <div className="flex items-center space-x-1 bg-yellow-50 border border-yellow-200 rounded-full px-3 py-1">

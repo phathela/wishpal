@@ -5,11 +5,14 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import ThemeSwitcher from '../components/ThemeSwitcher';
 
 // WishPal brand logo — blue "W" in white rounded square + "WishPal" text
 function WishPalLogo({ size = 32, showText = true }) {
   const boxSize = size;
-  const fontSize = Math.round(size * 0.48);
   const textSize = Math.round(size * 0.58);
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: showText ? '6px' : '0', lineHeight: 1 }}>
@@ -111,6 +114,8 @@ const allCountries = [
 
 export default function Landing() {
   const { user } = useAuth();
+  const { currentTheme } = useTheme();
+  const { t, tReplace } = useLanguage();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -250,42 +255,42 @@ export default function Landing() {
   };
 
   const testimonials = [
-    { name: 'Sarah Johnson', role: 'Small Business Owner', text: 'I needed a new website for my bakery. Within 24 hours, I was matched with an amazing web developer who built exactly what I wanted!', result: 'Website built, business doubled', emoji: '🍰', location: 'New York, USA' },
-    { name: 'Carlos Mendez', role: 'Freelancer', text: 'I was looking for cleaning jobs in my area. WishPal matched me with 5 clients in my first week. This platform is a game-changer!', result: '5 new clients, steady income', emoji: '🧹', location: 'Mexico City, Mexico' },
-    { name: 'Priya Sharma', role: 'Homeowner', text: 'Found the perfect plumber through WishPal. Fixed my pipes within hours of posting my wish. So convenient!', result: 'Problem solved same day', emoji: '🔧', location: 'Mumbai, India' },
-    { name: 'James Okonkwo', role: 'Job Seeker', text: 'Posted a wish for a graphic design job and got 3 interview offers. Landed my dream job within a week!', result: 'Dream job secured', emoji: '🎨', location: 'Lagos, Nigeria' },
-    { name: 'Emma Thompson', role: 'Parent', text: 'Found a wonderful English tutor for my kids through WishPal. The AI matching is incredibly accurate — it knew exactly what we needed.', result: 'Kids improving every week', emoji: '📚', location: 'London, UK' },
-    { name: 'Yuki Tanaka', role: 'Professional', text: 'I needed translation services urgently for a business deal. WishPal connected me with a certified translator in hours. Saved my deal!', result: 'Business deal closed', emoji: '🤝', location: 'Tokyo, Japan' },
+    { name: 'Sarah Johnson', role: 'Small Business Owner', text: 'I needed a new website for my bakery. Within 24 hours, I was matched with an amazing web developer who built exactly what I wanted!', result: 'Website built, business doubled', emoji: '\u{1F370}', location: 'New York, USA' },
+    { name: 'Carlos Mendez', role: 'Freelancer', text: 'I was looking for cleaning jobs in my area. WishPal matched me with 5 clients in my first week. This platform is a game-changer!', result: '5 new clients, steady income', emoji: '\u{1F9F9}', location: 'Mexico City, Mexico' },
+    { name: 'Priya Sharma', role: 'Homeowner', text: 'Found the perfect plumber through WishPal. Fixed my pipes within hours of posting my wish. So convenient!', result: 'Problem solved same day', emoji: '\u{1F527}', location: 'Mumbai, India' },
+    { name: 'James Okonkwo', role: 'Job Seeker', text: 'Posted a wish for a graphic design job and got 3 interview offers. Landed my dream job within a week!', result: 'Dream job secured', emoji: '\u{1F3A8}', location: 'Lagos, Nigeria' },
+    { name: 'Emma Thompson', role: 'Parent', text: 'Found a wonderful English tutor for my kids through WishPal. The AI matching is incredibly accurate — it knew exactly what we needed.', result: 'Kids improving every week', emoji: '\u{1F4DA}', location: 'London, UK' },
+    { name: 'Yuki Tanaka', role: 'Professional', text: 'I needed translation services urgently for a business deal. WishPal connected me with a certified translator in hours. Saved my deal!', result: 'Business deal closed', emoji: '\u{1F91D}', location: 'Tokyo, Japan' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className={`min-h-screen ${currentTheme.sectionAlt === 'bg-gray-50' ? 'bg-gradient-to-b from-gray-50 to-white' : currentTheme.sectionAlt}`}>
       {/* ═══════════════ SCROLLING TICKER ═══════════════ */}
       <div className="bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500 text-gray-900 font-semibold text-sm py-2 overflow-hidden relative">
         <div className="absolute inset-0 bg-black/5" />
         <div ref={tickerRef} className="whitespace-nowrap flex" style={{ willChange: 'transform' }}>
           <span className="inline-flex items-center space-x-8 px-4">
-            <span>🏆 <strong>Most successful wished this week:</strong></span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.jobsFound} Jobs found</span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.productsBought} Products bought</span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.usersAdvised} Users advised for free</span>
+            <span>🏆 <strong>{t('ticker.mostSuccessful')}</strong></span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.jobsFound} {t('ticker.jobsFound')}</span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.productsBought} {t('ticker.productsBought')}</span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.usersAdvised} {t('ticker.usersAdvised')}</span>
             <span>•</span>
-            <span>🔥 <strong>Trending:</strong></span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesClosedThisWeek} Wishes fulfilled</span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesLive} Active wishes</span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesBeingPosted} Being posted now</span>
+            <span>🔥 <strong>{t('ticker.trending')}</strong></span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesClosedThisWeek} {t('ticker.wishesFulfilled')}</span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesLive} {t('ticker.activeWishes')}</span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesBeingPosted} {t('ticker.beingPosted')}</span>
           </span>
           {/* Duplicate for seamless loop */}
           <span className="inline-flex items-center space-x-8 px-4">
-            <span>🏆 <strong>Most successful wished this week:</strong></span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.jobsFound} Jobs found</span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.productsBought} Products bought</span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.usersAdvised} Users advised for free</span>
+            <span>🏆 <strong>{t('ticker.mostSuccessful')}</strong></span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.jobsFound} {t('ticker.jobsFound')}</span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.productsBought} {t('ticker.productsBought')}</span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.usersAdvised} {t('ticker.usersAdvised')}</span>
             <span>•</span>
-            <span>🔥 <strong>Trending:</strong></span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesClosedThisWeek} Wishes fulfilled</span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesLive} Active wishes</span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesBeingPosted} Being posted now</span>
+            <span>🔥 <strong>{t('ticker.trending')}</strong></span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesClosedThisWeek} {t('ticker.wishesFulfilled')}</span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesLive} {t('ticker.activeWishes')}</span>
+            <span className="bg-white/20 px-3 py-0.5 rounded-full">{liveStats.wishesBeingPosted} {t('ticker.beingPosted')}</span>
           </span>
         </div>
       </div>
@@ -302,25 +307,25 @@ export default function Landing() {
           <div className="bg-gray-900/95 backdrop-blur-md text-white rounded-l-xl p-4 shadow-2xl border border-gray-700/50 border-r-0 min-w-[180px]">
             <div className="flex items-center space-x-2 mb-3 border-b border-gray-700 pb-2">
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-xs font-semibold text-green-400 uppercase tracking-wider">Live Now</span>
+              <span className="text-xs font-semibold text-green-400 uppercase tracking-wider">{t('stats.liveNow')}</span>
             </div>
             <div className="space-y-3">
               <div>
                 <p className="text-2xl font-bold text-yellow-400">{liveStats.wishesLive.toLocaleString()}</p>
-                <p className="text-xs text-gray-400">Wishes Live</p>
+                <p className="text-xs text-gray-400">{t('stats.wishesLive')}</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-green-400">{liveStats.wishesClosedThisWeek.toLocaleString()}</p>
-                <p className="text-xs text-gray-400">Closed This Week</p>
+                <p className="text-xs text-gray-400">{t('stats.closedThisWeek')}</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-blue-400">{liveStats.wishesBeingPosted.toLocaleString()}</p>
-                <p className="text-xs text-gray-400">Being Posted Now</p>
+                <p className="text-xs text-gray-400">{t('stats.beingPostedNow')}</p>
               </div>
               <div className="pt-2 border-t border-gray-700">
                 <div className="flex items-center space-x-1">
                   <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-ping" />
-                  <span className="text-xs text-gray-400">Updating in real-time</span>
+                  <span className="text-xs text-gray-400">{t('stats.updatingRealTime')}</span>
                 </div>
               </div>
             </div>
@@ -329,48 +334,53 @@ export default function Landing() {
       )}
 
       {/* ═══════════════ HERO ═══════════════ */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-800">
+      <section className={`relative overflow-hidden bg-gradient-to-br ${currentTheme.hero}`}>
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-28 lg:py-36">
+          {/* Top bar with language & theme switchers */}
+          <div className="flex justify-end items-center space-x-2 mb-6">
+            <LanguageSwitcher />
+            <ThemeSwitcher />
+          </div>
+
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm text-white rounded-full px-5 py-2 mb-8 text-sm font-medium border border-white/10">
               <WishPalLogo size={22} showText={false} />
-              <span>AI-Powered Wish Matching Platform</span>
+              <span>{t('hero.badge')}</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
-              Got a wish? WishPal makes it happen —
+            <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold ${currentTheme.heroText} leading-tight mb-6`}>
+              {t('hero.title')}
             </h1>
-            <p className="text-lg sm:text-xl text-purple-200 mb-8 max-w-3xl mx-auto leading-relaxed">
-              powered by AI and 100% free. Try it now
+            <p className={`text-lg sm:text-xl ${currentTheme.primary50 ? 'text-purple-200' : currentTheme.heroText} opacity-80 mb-8 max-w-3xl mx-auto leading-relaxed`}>
+              {t('hero.subtitle')}
             </p>
-            <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-8">
-              Your Wish + WishPal ={' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-300">Your Solution</span>
+            <div className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold ${currentTheme.heroText} leading-tight mb-8`}>
+              {t('hero.formula').split('=')[0]}={<span className={`text-transparent bg-clip-text bg-gradient-to-r ${currentTheme.heroAccent}`}>{t('hero.formula').split('=').slice(1).join('=')}</span>}
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               {user ? (
                 <Link
                   to="/wish/new"
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-gray-900 text-lg font-bold rounded-lg px-8 py-4 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  className={`bg-gradient-to-r ${currentTheme.btnPrimary} hover:${currentTheme.btnPrimaryHover} text-gray-900 text-lg font-bold rounded-lg px-8 py-4 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5`}
                 >
                   <WishPalLogo size={20} showText={false} />{' '}
-                  Make a Wish
+                  {t('hero.cta.makeWish')}
                 </Link>
               ) : (
                 <Link
                   to="/register"
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-gray-900 text-lg font-bold rounded-lg px-8 py-4 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  className={`bg-gradient-to-r ${currentTheme.btnPrimary} hover:${currentTheme.btnPrimaryHover} text-gray-900 text-lg font-bold rounded-lg px-8 py-4 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5`}
                 >
                   <WishPalLogo size={20} showText={false} />{' '}
-                  It is Free, start now
+                  {t('hero.cta.free')}
                 </Link>
               )}
               <Link
                 to="/search"
                 className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white text-lg font-semibold rounded-lg px-8 py-4 border border-white/20 transition-all duration-200"
               >
-                Explore Wishes
+                {t('hero.cta.explore')}
               </Link>
             </div>
 
@@ -384,14 +394,14 @@ export default function Landing() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search wishes... e.g., 'house cleaning', 'web developer job'"
+                  placeholder={t('hero.search.placeholder')}
                   className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-purple-300 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 shadow-sm"
                 />
                 <button
                   type="submit"
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-gray-900 font-bold rounded-lg px-6 py-2 transition-all duration-200"
                 >
-                  Search
+                  {t('hero.search.button')}
                 </button>
               </div>
             </form>
@@ -409,21 +419,21 @@ export default function Landing() {
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-4 border border-purple-100">
+            <div className={`bg-gradient-to-br ${currentTheme.stat1} rounded-xl p-4 border border-purple-100`}>
               <p className="text-3xl font-bold text-purple-600">{liveStats.wishesLive.toLocaleString()}</p>
-              <p className="text-sm text-gray-500">Wishes Live Now</p>
+              <p className="text-sm text-gray-500">{t('banner.wishesLiveNow')}</p>
             </div>
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-100">
+            <div className={`bg-gradient-to-br ${currentTheme.stat2} rounded-xl p-4 border border-green-100`}>
               <p className="text-3xl font-bold text-green-600">{liveStats.wishesClosedThisWeek.toLocaleString()}</p>
-              <p className="text-sm text-gray-500">Closed This Week</p>
+              <p className="text-sm text-gray-500">{t('banner.closedThisWeek')}</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+            <div className={`bg-gradient-to-br ${currentTheme.stat3} rounded-xl p-4 border border-blue-100`}>
               <p className="text-3xl font-bold text-blue-600">{liveStats.jobsFound.toLocaleString()}</p>
-              <p className="text-sm text-gray-500">Jobs Found</p>
+              <p className="text-sm text-gray-500">{t('banner.jobsFound')}</p>
             </div>
-            <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-4 border border-orange-100">
+            <div className={`bg-gradient-to-br ${currentTheme.stat4} rounded-xl p-4 border border-orange-100`}>
               <p className="text-3xl font-bold text-orange-600">{liveStats.productsBought.toLocaleString()}</p>
-              <p className="text-sm text-gray-500">Products Bought</p>
+              <p className="text-sm text-gray-500">{t('banner.productsBought')}</p>
             </div>
           </div>
         </div>
@@ -437,10 +447,10 @@ export default function Landing() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
                 <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-                <span>📋 Notice Board</span>
+                <span>{t('noticeBoard.title')}</span>
               </h2>
               <Link to="/search" className="text-sm text-purple-600 hover:text-purple-700 font-medium">
-                View all →
+                {t('noticeBoard.viewAll')} →
               </Link>
             </div>
             <div
@@ -453,7 +463,7 @@ export default function Landing() {
                 </div>
               ) : recentWishes.length === 0 ? (
                 <div className="flex items-center justify-center h-full text-gray-400">
-                  <p>No wishes posted yet. Be the first!</p>
+                  <p>{t('noticeBoard.empty')}</p>
                 </div>
               ) : (
                 <div className="p-4 space-y-3">
@@ -477,14 +487,14 @@ export default function Landing() {
                               {wish.category}
                             </span>
                             {wish.location_country && (
-                              <span className="text-xs text-gray-400">📍 {wish.location_country}</span>
+                              <span className="text-xs text-gray-400">{wish.location_country}</span>
                             )}
                           </div>
                         </div>
                         <div className="text-right flex-shrink-0">
                           {daysLeft !== null && (
                             <span className={`text-xs font-semibold ${daysLeft <= 3 ? 'text-red-500' : 'text-gray-400'}`}>
-                              {daysLeft === 0 ? 'Today' : `${daysLeft}d left`}
+                              {daysLeft === 0 ? t('today') : tReplace('daysLeft', { days: daysLeft })}
                             </span>
                           )}
                         </div>
@@ -500,15 +510,14 @@ export default function Landing() {
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
-                <span>🌍</span>
-                <span>WishPad Map</span>
+                <span>{t('map.title')}</span>
               </h2>
               <select
                 value={filterCountry}
                 onChange={(e) => setFilterCountry(e.target.value)}
                 className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 text-gray-600 bg-white focus:ring-2 focus:ring-purple-500 max-w-[160px]"
               >
-                <option value="">All Countries</option>
+                <option value="">{t('map.allCountries')}</option>
                 {allCountries
                   .filter(c => wishpads.some(w => w.country === c))
                   .map((c) => (
@@ -554,14 +563,14 @@ export default function Landing() {
                             {w.description && <p className="text-xs text-gray-400 mt-1 line-clamp-2">{w.description}</p>}
                             <div className="flex items-center justify-center space-x-2 mt-2">
                               <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
-                                {w.unlocked_matches || 0} matches
+                                {w.unlocked_matches || 0} {t('map.matches')}
                               </span>
                             </div>
                             <a
                               href={`/b/${w.slug}`}
                               className="text-xs text-purple-600 font-medium hover:underline mt-2 inline-block"
                             >
-                              View Page →
+                              {t('map.viewPage')} →
                             </a>
                           </div>
                         </Popup>
@@ -575,14 +584,14 @@ export default function Landing() {
             <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-100 p-4">
               <h3 className="text-sm font-bold text-red-600 mb-3 flex items-center space-x-1.5">
                 <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                <span>⏰ Closing Soon</span>
+                <span>{t('closingSoon.title')}</span>
               </h3>
               {loadingWishes ? (
                 <div className="flex justify-center py-4">
                   <div className="w-6 h-6 border-3 border-red-400 border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : closingSoonWishes.length === 0 ? (
-                <p className="text-sm text-gray-400 py-2">No wishes closing soon</p>
+                <p className="text-sm text-gray-400 py-2">{t('closingSoon.empty')}</p>
               ) : (
                 <div className="space-y-2 max-h-[140px] overflow-y-auto">
                   {closingSoonWishes.map((wish) => {
@@ -598,7 +607,7 @@ export default function Landing() {
                           <p className="text-xs text-gray-400">{wish.category}</p>
                         </div>
                         <span className={`text-xs font-bold whitespace-nowrap ${daysLeft <= 2 ? 'text-red-500' : 'text-orange-500'}`}>
-                          {daysLeft === 0 ? 'Last day!' : `${daysLeft}d`}
+                          {daysLeft === 0 ? t('closingSoon.lastDay') : `${daysLeft}d`}
                         </span>
                       </div>
                     );
@@ -610,13 +619,79 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ═══════════════ WHY WE ALL NEED WISHPAL (FEATURES) ═══════════════ */}
+      <section className={`py-16 ${currentTheme.sectionAlt}`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">{t('features.title')}</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">
+              {t('features.subtitle')}
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Revenue Generator */}
+            <div className={`group bg-gradient-to-br ${currentTheme.feature1} rounded-2xl p-6 border border-green-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
+              <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-green-200">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{t('features.revenue.title')}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {t('features.revenue.desc')}
+              </p>
+            </div>
+
+            {/* Cost Saving Tool */}
+            <div className={`group bg-gradient-to-br ${currentTheme.feature2} rounded-2xl p-6 border border-blue-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-200">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{t('features.costSaving.title')}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {t('features.costSaving.desc')}
+              </p>
+            </div>
+
+            {/* Informative */}
+            <div className={`group bg-gradient-to-br ${currentTheme.feature3} rounded-2xl p-6 border border-purple-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
+              <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-purple-200">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{t('features.informative.title')}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {t('features.informative.desc')}
+              </p>
+            </div>
+
+            {/* Problem Solving */}
+            <div className={`group bg-gradient-to-br ${currentTheme.feature4} rounded-2xl p-6 border border-orange-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
+              <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-amber-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-orange-200">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{t('features.problemSolving.title')}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {t('features.problemSolving.desc')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ═══════════════ TOP WISHPADS ═══════════════ */}
-      <section className="bg-gradient-to-b from-white to-purple-50 py-16">
+      <section className={`bg-gradient-to-b ${currentTheme.section} py-16`}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">🌟 Explore Top WishPads</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">{t('topWishpads.title')}</h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Discover businesses and service providers ready to fulfill your wishes worldwide
+              {t('topWishpads.subtitle')}
             </p>
           </div>
 
@@ -626,9 +701,9 @@ export default function Landing() {
             </div>
           ) : topWishpads.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-400">No WishPads registered yet. Be the first!</p>
+              <p className="text-gray-400">{t('topWishpads.empty')}</p>
               <Link to="/register" className="inline-block mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg px-6 py-3 transition-all duration-200">
-                Register as WishPad
+                {t('topWishpads.register')}
               </Link>
             </div>
           ) : (
@@ -637,7 +712,7 @@ export default function Landing() {
                 <Link
                   key={wp.id}
                   to={`/b/${wp.slug}`}
-                  className="group bg-white rounded-xl border border-gray-200 p-5 hover:shadow-xl hover:border-purple-200 hover:-translate-y-1 transition-all duration-300"
+                  className={`group bg-white rounded-xl border border-gray-200 p-5 hover:shadow-xl ${currentTheme.card} hover:-translate-y-1 transition-all duration-300`}
                 >
                   <div className="w-16 h-16 mx-auto mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center">
                     {wp.logo_url ? (
@@ -656,7 +731,7 @@ export default function Landing() {
                   )}
                   <div className="flex items-center justify-center mt-3 space-x-1">
                     <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
-                      {wp.unlocked_matches || 0} matches
+                      {wp.unlocked_matches || 0} {t('topWishpads.matches')}
                     </span>
                   </div>
                 </Link>
@@ -670,30 +745,30 @@ export default function Landing() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">💬 Success Stories</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">{t('testimonials.title')}</h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Real people, real results — powered by WishPal
+              {t('testimonials.subtitle')}
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
+            {testimonials.map((tItem, i) => (
               <div key={i} className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center text-xl flex-shrink-0">
-                    {t.emoji}
+                    {tItem.emoji}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="font-bold text-gray-900">{t.name}</p>
-                      <span className="text-xs bg-purple-50 text-purple-600 font-semibold px-2 py-0.5 rounded-full">Verified</span>
+                      <p className="font-bold text-gray-900">{tItem.name}</p>
+                      <span className="text-xs bg-purple-50 text-purple-600 font-semibold px-2 py-0.5 rounded-full">{t('testimonials.verified')}</span>
                     </div>
-                    <p className="text-xs text-gray-400 mb-2">{t.role} · {t.location}</p>
-                    <p className="text-sm text-gray-600 leading-relaxed">{t.text}</p>
+                    <p className="text-xs text-gray-400 mb-2">{tItem.role} · {tItem.location}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">{tItem.text}</p>
                     <div className="flex items-center space-x-1.5 mt-3 pt-3 border-t border-gray-100">
                       <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-xs font-semibold text-green-700">{t.result}</span>
+                      <span className="text-xs font-semibold text-green-700">{tItem.result}</span>
                     </div>
                   </div>
                 </div>
@@ -703,90 +778,24 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══════════════ FEATURES GRID ═══════════════ */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Why We All Need WishPal</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">
-              The platform that connects wishes with opportunities
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Revenue Generator */}
-            <div className="group bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-green-200">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Revenue Generator</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Turn wishes into revenue. Businesses get matched with customers actively seeking their services — no cold outreach needed.
-              </p>
-            </div>
-
-            {/* Cost Saving Tool */}
-            <div className="group bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-200">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Cost Saving Tool</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Save money by finding exactly what you need through wish-based matching. No expensive ads or middleman fees.
-              </p>
-            </div>
-
-            {/* Informative */}
-            <div className="group bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-purple-200">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Informative</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                AI-powered insights on every wish. Get smart matching, market intelligence, and data-driven recommendations.
-              </p>
-            </div>
-
-            {/* Problem Solving */}
-            <div className="group bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6 border border-orange-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-amber-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-orange-200">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Problem Solving</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Have a problem? Post a wish and let our AI match you with the perfect solution. From home repairs to career moves.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ═══════════════ TAGLINE BANNER ═══════════════ */}
-      <section className="bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-800 py-16">
+      <section className={`bg-gradient-to-r ${currentTheme.tagline} py-16`}>
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full mb-6">
             <WishPalLogo size={36} showText={false} />
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
-            WishPal: The only tool for all your need all times
+          <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-bold ${currentTheme.heroText} mb-4 leading-tight`}>
+            {t('tagline.title')}
           </h2>
-          <p className="text-purple-200 text-lg mb-8">
-            Your wishes, matched by AI. Every time, every need.
+          <p className={`${currentTheme.primary50 ? 'text-purple-200' : currentTheme.heroText} opacity-80 text-lg mb-8`}>
+            {t('tagline.subtitle')}
           </p>
           {!user && (
             <Link
               to="/register"
-              className="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-gray-900 font-bold rounded-lg px-8 py-4 transition-all duration-200 shadow-lg"
+              className={`bg-gradient-to-r ${currentTheme.btnPrimary} hover:${currentTheme.btnPrimaryHover} text-gray-900 font-bold rounded-lg px-8 py-4 transition-all duration-200 shadow-lg`}
             >
-              It is Free, start now
+              {t('tagline.cta')}
             </Link>
           )}
         </div>
@@ -801,35 +810,35 @@ export default function Landing() {
                 <WishPalLogo size={28} />
               </div>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Your wishes, matched by AI. We connect you with the right people to fulfill your wishes.
+                {t('footer.description')}
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-4">Platform</h4>
+              <h4 className="font-semibold text-white mb-4">{t('footer.platform')}</h4>
               <ul className="space-y-2">
-                <li><Link to="/search" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">Browse Wishes</Link></li>
-                <li><Link to="/register" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">Join as WishMate</Link></li>
-                <li><Link to="/register" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">Join as WishPad</Link></li>
+                <li><Link to="/search" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">{t('footer.browseWishes')}</Link></li>
+                <li><Link to="/register" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">{t('footer.joinWishMate')}</Link></li>
+                <li><Link to="/register" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">{t('footer.joinWishPad')}</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-4">Support</h4>
+              <h4 className="font-semibold text-white mb-4">{t('footer.support')}</h4>
               <ul className="space-y-2">
-                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">FAQ</Link></li>
-                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">Contact Us</Link></li>
-                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">Privacy Policy</Link></li>
+                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">{t('footer.faq')}</Link></li>
+                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">{t('footer.contactUs')}</Link></li>
+                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">{t('footer.privacyPolicy')}</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-white mb-4">Legal</h4>
+              <h4 className="font-semibold text-white mb-4">{t('footer.legal')}</h4>
               <ul className="space-y-2">
-                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">Terms of Service</Link></li>
-                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">Cookie Policy</Link></li>
+                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">{t('footer.termsOfService')}</Link></li>
+                <li><Link to="#" className="text-sm text-gray-400 hover:text-purple-400 transition-colors duration-200">{t('footer.cookiePolicy')}</Link></li>
               </ul>
             </div>
           </div>
           <div className="pt-8 border-t border-gray-800 text-center">
-            <p className="text-sm text-gray-500">&copy; {new Date().getFullYear()} WishPal. All rights reserved.</p>
+            <p className="text-sm text-gray-500">&copy; {new Date().getFullYear()} WishPal. {t('footer.allRightsReserved')}</p>
           </div>
         </div>
       </footer>
