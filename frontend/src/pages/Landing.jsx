@@ -349,15 +349,15 @@ export default function Landing() {
               <WishPalLogo size={22} showText={false} />
               <span>{t('hero.badge')}</span>
             </div>
-            <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold ${currentTheme.heroText} leading-tight mb-6`}>
+            <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-extrabold ${currentTheme.heroText} leading-tight mb-6`}>
               {t('hero.title')}
             </h1>
             <p className={`text-lg sm:text-xl ${currentTheme.primary50 ? 'text-purple-200' : currentTheme.heroText} opacity-80 mb-8 max-w-3xl mx-auto leading-relaxed`}>
               {t('hero.subtitle')}
             </p>
-            <div className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold ${currentTheme.heroText} leading-tight mb-8`}>
-              {t('hero.formula').split('=')[0]}={<span className={`text-transparent bg-clip-text bg-gradient-to-r ${currentTheme.heroAccent}`}>{t('hero.formula').split('=').slice(1).join('=')}</span>}
-            </div>
+            <p className={`text-sm sm:text-base lg:text-lg ${currentTheme.heroText} opacity-90 max-w-4xl mx-auto leading-relaxed mb-8 px-4`}>
+              {t('hero.formula')}
+            </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               {user ? (
                 <Link
@@ -382,6 +382,18 @@ export default function Landing() {
               >
                 {t('hero.cta.explore')}
               </Link>
+              <a
+                href="#top-wishpads"
+                className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white text-lg font-semibold rounded-lg px-8 py-4 border border-white/20 transition-all duration-200"
+              >
+                {t('hero.cta.exploreWishpads')}
+              </a>
+              <a
+                href="#benefits"
+                className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white text-lg font-semibold rounded-lg px-8 py-4 border border-white/20 transition-all duration-200"
+              >
+                {t('hero.cta.seeBenefits')}
+              </a>
             </div>
 
             {/* Search Bar */}
@@ -619,8 +631,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ═══════════════ WHY WE ALL NEED WISHPAL (FEATURES) ═══════════════ */}
-      <section className={`py-16 ${currentTheme.sectionAlt}`}>
+      {/* ═══════════════ WHY WE ALL NEED WISHPAL (BENEFITS) ═══════════════ */}
+      <section id="benefits" className={`py-16 ${currentTheme.sectionAlt}`}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">{t('features.title')}</h2>
@@ -629,64 +641,147 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Revenue Generator */}
-            <div className={`group bg-gradient-to-br ${currentTheme.feature1} rounded-2xl p-6 border border-green-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
-              <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-green-200">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* For Ordinary Users (Individuals) */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-5">
+                <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white">{t('features.individuals.title')}</h3>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">{t('features.revenue.title')}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                {t('features.revenue.desc')}
-              </p>
+              <div className="p-6 space-y-5">
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.individuals.benefit1')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.individuals.benefit1Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.individuals.benefit2')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.individuals.benefit2Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.individuals.benefit3')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.individuals.benefit3Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.individuals.benefit4')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.individuals.benefit4Desc')}</p>
+                  </div>
+                </div>
+                <Link to="/benefits#individuals" className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200">
+                  {t('features.individuals.more')}
+                </Link>
+              </div>
             </div>
 
-            {/* Cost Saving Tool */}
-            <div className={`group bg-gradient-to-br ${currentTheme.feature2} rounded-2xl p-6 border border-blue-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
-              <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-200">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            {/* For Businesses */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+              <div className="bg-gradient-to-r from-emerald-500 to-green-600 px-6 py-5">
+                <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white">{t('features.businesses.title')}</h3>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">{t('features.costSaving.title')}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                {t('features.costSaving.desc')}
-              </p>
+              <div className="p-6 space-y-5">
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.businesses.benefit1')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.businesses.benefit1Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.businesses.benefit2')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.businesses.benefit2Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.businesses.benefit3')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.businesses.benefit3Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.businesses.benefit4')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.businesses.benefit4Desc')}</p>
+                  </div>
+                </div>
+                <Link to="/benefits#businesses" className="inline-flex items-center text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors duration-200">
+                  {t('features.businesses.more')}
+                </Link>
+              </div>
             </div>
 
-            {/* Informative */}
-            <div className={`group bg-gradient-to-br ${currentTheme.feature3} rounded-2xl p-6 border border-purple-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
-              <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-purple-200">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
+            {/* For NGOs */}
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+              <div className="bg-gradient-to-r from-purple-500 to-pink-600 px-6 py-5">
+                <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white">{t('features.ngos.title')}</h3>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">{t('features.informative.title')}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                {t('features.informative.desc')}
-              </p>
-            </div>
-
-            {/* Problem Solving */}
-            <div className={`group bg-gradient-to-br ${currentTheme.feature4} rounded-2xl p-6 border border-orange-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-amber-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-orange-200">
-                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
+              <div className="p-6 space-y-5">
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.ngos.benefit1')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.ngos.benefit1Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.ngos.benefit2')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.ngos.benefit2Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.ngos.benefit3')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.ngos.benefit3Desc')}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</span>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t('features.ngos.benefit4')}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{t('features.ngos.benefit4Desc')}</p>
+                  </div>
+                </div>
+                <Link to="/benefits#ngos" className="inline-flex items-center text-sm font-semibold text-purple-600 hover:text-purple-700 transition-colors duration-200">
+                  {t('features.ngos.more')}
+                </Link>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">{t('features.problemSolving.title')}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                {t('features.problemSolving.desc')}
-              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* ═══════════════ TOP WISHPADS ═══════════════ */}
-      <section className={`bg-gradient-to-b ${currentTheme.section} py-16`}>
+      <section id="top-wishpads" className={`bg-gradient-to-b ${currentTheme.section} py-16`}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">{t('topWishpads.title')}</h2>

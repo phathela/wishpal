@@ -7,10 +7,10 @@ const translations = {
     navbar: { home: 'Home', search: 'Search', dashboard: 'Dashboard' },
     hero: {
       badge: 'AI-Powered Wish Matching Platform',
-      title: 'Got a wish? WishPal makes it happen —',
+      title: 'Got a wish? WishPal makes it happen.',
       subtitle: 'powered by AI and 100% free. Try it now',
-      formula: 'Your Wish + WishPal = Your Solution',
-      cta: { free: 'It is Free, start now', makeWish: 'Make a Wish', explore: 'Explore Wishes' },
+      formula: "It's simple: Post your wish, our AI Bots work 24/7, and you receive precise leads and tailored advice.",
+      cta: { free: 'It is Free, start now', makeWish: 'Make a Wish', explore: 'Explore Wishes', exploreWishpads: 'Explore WishPads', seeBenefits: 'See Benefits' },
       search: { placeholder: "Search wishes... e.g., 'house cleaning', 'web developer job'", button: 'Search' },
     },
     ticker: {
@@ -67,15 +67,151 @@ const translations = {
     features: {
       title: 'Why We All Need WishPal',
       subtitle: 'The platform that connects wishes with opportunities',
-      revenue: { title: 'Revenue Generator', desc: 'Turn wishes into revenue. Businesses get matched with customers actively seeking their services — no cold outreach needed.' },
-      costSaving: { title: 'Cost Saving Tool', desc: 'Save money by finding exactly what you need through wish-based matching. No expensive ads or middleman fees.' },
-      informative: { title: 'Informative', desc: 'AI-powered insights on every wish. Get smart matching, market intelligence, and data-driven recommendations.' },
-      problemSolving: { title: 'Problem Solving', desc: 'Have a problem? Post a wish and let our AI match you with the perfect solution. From home repairs to career moves.' },
+      individuals: {
+        title: 'For Ordinary Users (Individuals)',
+        benefit1: 'Instant Access to Solutions',
+        benefit1Desc: 'Post any wish — big or small — and our AI Bots immediately start searching 24/7 for practical solutions, whether it’s finding a job, affordable housing, medical advice, travel deals, or personal development opportunities.',
+        benefit2: 'Personalized Advice & Leads',
+        benefit2Desc: 'Receive tailored recommendations, direct contacts, and relevant opportunities without spending hours searching yourself.',
+        benefit3: 'Problem Solver',
+        benefit3Desc: 'From fixing a leaking roof to advancing your career or finding the perfect school for your child — your wish gets constant attention until solutions arrive.',
+        benefit4: 'Free & Stress-Free',
+        benefit4Desc: 'No need for expensive consultants or time-consuming research. Just post and let the AI work for you.',
+        more: 'More Benefits →',
+      },
+      businesses: {
+        title: 'For Businesses',
+        benefit1: 'Revenue Generator',
+        benefit1Desc: 'Turn customer wishes into real sales. Businesses get matched with people actively seeking their products or services — warm leads instead of cold outreach.',
+        benefit2: 'Cost-Saving Tool',
+        benefit2Desc: 'Dramatically reduce marketing spend. Instead of running expensive ads, get connected directly to ready-to-buy customers through wish-based matching.',
+        benefit3: 'Market Intelligence',
+        benefit3Desc: 'Receive AI-powered insights on what customers truly want right now, helping you adjust offerings, pricing, and strategy in real time.',
+        benefit4: '24/7 Lead Generation',
+        benefit4Desc: 'While you sleep, our AI Bots are finding and qualifying new business opportunities for you.',
+        more: 'More Benefits →',
+      },
+      ngos: {
+        title: 'For Non-Profit Organisations & NGOs',
+        benefit1: 'Impact Amplifier',
+        benefit1Desc: 'Post wishes on behalf of communities and get matched with donors, volunteers, partners, and resources to amplify your impact.',
+        benefit2: 'Resource Mobilization',
+        benefit2Desc: 'Quickly find funding, expertise, equipment, or collaborators without traditional lengthy proposal processes.',
+        benefit3: 'Problem Solving at Scale',
+        benefit3Desc: 'Address social challenges faster by leveraging AI to connect needs with global opportunities and willing helpers.',
+        benefit4: 'Data-Driven Insights',
+        benefit4Desc: 'Gain valuable intelligence on community needs and trends to strengthen proposals and improve program effectiveness.',
+        more: 'More Benefits →',
+      },
     },
     tagline: {
       title: 'WishPal: The only tool for all your need all times',
       subtitle: 'Your wishes, matched by AI. Every time, every need.',
       cta: 'It is Free, start now',
+    },
+    benefitsPage: {
+      individuals: {
+        title: 'For Ordinary Users (Individuals)',
+        subtitle: 'Empowering everyday people with AI-driven wish fulfillment — free, fast, and effective.',
+        hero: 'WishPal gives individuals a powerful platform to get things done without the hassle. Post a wish, and let AI work around the clock to connect you with the right people, services, and opportunities.',
+        benefit1: {
+          title: 'Instant Access to Solutions',
+          desc: 'Post any wish — big or small — and our AI Bots immediately start searching 24/7 for practical solutions, whether it\'s finding a job, affordable housing, medical advice, travel deals, or personal development opportunities. No more endless Googling or asking around.',
+        },
+        benefit2: {
+          title: 'Personalized Advice & Leads',
+          desc: 'Receive tailored recommendations based on your specific needs, location, and preferences. Our AI analyzes your wish and matches you with the most relevant providers, opportunities, and solutions — saving you hours of research.',
+        },
+        benefit3: {
+          title: 'Problem Solver',
+          desc: 'From fixing a leaking roof to advancing your career or finding the perfect school for your child — your wish gets constant attention until solutions arrive. The AI persists, learns, and refines matches over time to ensure you get results.',
+        },
+        benefit4: {
+          title: 'Free & Stress-Free',
+          desc: 'No need for expensive consultants or time-consuming research. Just post and let the AI work for you. The platform is free for individuals, with optional premium features for those who want even faster results.',
+        },
+        benefit5: {
+          title: 'Always Save Costs when Buying',
+          desc: 'Get matched with competitive offers for products and services you need. Whether it\'s insurance, electronics, or household services — our AI finds you the best value deals so you always save money.',
+        },
+        benefit6: {
+          title: 'Be Informed on Anything',
+          desc: 'Stay updated with AI-curated information relevant to your wishes and interests. Get news, tips, and insights tailored to what matters to you — from market trends to educational resources.',
+        },
+        benefit7: {
+          title: 'Generate Quick Cash',
+          desc: 'Have a skill or asset? Post what you can offer and get matched with people who need it. Turn your talents, spare time, or unused items into extra income fast.',
+        },
+        summary: 'For individuals, WishPal is your personal assistant, researcher, matchmaker, and problem solver — all in one. It puts the power of AI to work for you, every day, for free.',
+      },
+      businesses: {
+        title: 'For Businesses',
+        subtitle: 'Transform customer wishes into revenue with AI-powered lead generation and market intelligence.',
+        hero: 'WishPal gives businesses a direct line to customers who are actively seeking what you offer. No cold outreach, no wasted ad spend — just warm, qualified leads delivered to your doorstep by AI.',
+        benefit1: {
+          title: 'Revenue Generator',
+          desc: 'Turn customer wishes into real sales. Businesses get matched with people actively seeking their products or services — warm leads instead of cold outreach. The AI qualifies each match based on intent, budget, and proximity, so every lead counts.',
+        },
+        benefit2: {
+          title: 'Cost-Saving Tool',
+          desc: 'Dramatically reduce marketing spend. Instead of running expensive ads with uncertain ROI, get connected directly to ready-to-buy customers through wish-based matching. Pay only for results, not impressions.',
+        },
+        benefit3: {
+          title: 'Market Intelligence',
+          desc: 'Receive AI-powered insights on what customers truly want right now, helping you adjust offerings, pricing, and strategy in real time. Understand demand patterns, seasonal trends, and emerging needs in your industry.',
+        },
+        benefit4: {
+          title: '24/7 Lead Generation',
+          desc: 'While you sleep, our AI Bots are finding and qualifying new business opportunities for you. Wake up to a pipeline of warm leads matched to your business — never miss a sales opportunity again.',
+        },
+        benefit5: {
+          title: 'Build Your WishPad Page',
+          desc: 'Create a professional business page with your logo, description, social links, and location. Customers can discover you on the WishPad map, browse your offerings, and connect directly through the platform.',
+        },
+        benefit6: {
+          title: 'Customer Insights Dashboard',
+          desc: 'Access detailed analytics on who is wishing for what in your area. Understand customer demographics, popular categories, and conversion metrics to fine-tune your business strategy.',
+        },
+        benefit7: {
+          title: 'Brand Visibility & Trust',
+          desc: 'Get listed among verified WishPads with customer ratings and success metrics. Build trust through transparency and let your matched results speak for themselves.',
+        },
+        summary: 'For businesses, WishPad is the most efficient customer acquisition tool you will ever use. Stop chasing customers — let them come to you.',
+      },
+      ngos: {
+        title: 'For Non-Profit Organisations & NGOs',
+        subtitle: 'Amplify your impact by connecting community needs with global resources and willing helpers.',
+        hero: 'WishPal provides NGOs and non-profits with a powerful platform to post community needs, mobilize resources, and connect with donors, volunteers, and partners worldwide — all powered by intelligent AI matching.',
+        benefit1: {
+          title: 'Impact Amplifier',
+          desc: 'Post wishes on behalf of communities and get matched with donors, volunteers, partners, and resources to amplify your impact. Whether it\'s school supplies, medical equipment, or community infrastructure — tell us what you need and let AI find the support.',
+        },
+        benefit2: {
+          title: 'Resource Mobilization',
+          desc: 'Quickly find funding, expertise, equipment, or collaborators without traditional lengthy proposal processes. The AI identifies potential donors, grant opportunities, and in-kind contributors who align with your mission.',
+        },
+        benefit3: {
+          title: 'Problem Solving at Scale',
+          desc: 'Address social challenges faster by leveraging AI to connect needs with global opportunities and willing helpers. From disaster relief to long-term development projects — scale your impact beyond traditional networks.',
+        },
+        benefit4: {
+          title: 'Data-Driven Insights',
+          desc: 'Gain valuable intelligence on community needs and trends to strengthen proposals and improve program effectiveness. Use real-time wish data to demonstrate need, justify funding, and measure outcomes.',
+        },
+        benefit5: {
+          title: 'Volunteer Matching',
+          desc: 'Find skilled volunteers who want to contribute their time and expertise to your cause. The AI matches volunteer profiles with specific NGO needs — from pro-bono legal advice to teaching and healthcare.',
+        },
+        benefit6: {
+          title: 'Partnership Discovery',
+          desc: 'Identify and connect with other NGOs, government agencies, and corporate partners working in similar spaces. Collaborate on shared goals, co-author proposals, and avoid duplication of efforts.',
+        },
+        benefit7: {
+          title: 'Transparent Impact Reporting',
+          desc: 'Track and showcase every wish fulfilled, resource mobilized, and life impacted. Build donor confidence with transparent, data-backed impact reports generated automatically by the platform.',
+        },
+        summary: 'For NGOs, WishPal is a force multiplier. Do more with less, reach further with AI, and turn every wish into a measurable outcome.',
+      },
     },
     footer: {
       description: 'Your wishes, matched by AI. We connect you with the right people to fulfill your wishes.',
