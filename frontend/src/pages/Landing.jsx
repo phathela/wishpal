@@ -6,6 +6,25 @@ import 'leaflet/dist/leaflet.css';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 
+// WishPal brand logo — blue "W" in white rounded square + "WishPal" text
+function WishPalLogo({ size = 32, showText = true }) {
+  const boxSize = size;
+  const fontSize = Math.round(size * 0.48);
+  const textSize = Math.round(size * 0.58);
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: showText ? '6px' : '0', lineHeight: 1 }}>
+      <svg width={boxSize} height={boxSize} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+        <rect width="32" height="32" rx="7" fill="#3B82F6" />
+        <path d="M8 10l4 12 4-12 4 12 4-12" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      </svg>
+      {showText && <span style={{ fontWeight: 700, fontSize: textSize, color: '#1F2937', letterSpacing: '-0.3px' }}>WishPal</span>}
+    </span>
+  );
+}
+
+// Favicon data URI (blue square with white "W")
+const faviconSvg = `data:image/svg+xml,${encodeURIComponent('<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="7" fill="#3B82F6"/><path d="M8 10l4 12 4-12 4 12 4-12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>')}`;
+
 // Fix Leaflet default marker icon
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -196,6 +215,15 @@ export default function Landing() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Set favicon on mount
+  useEffect(() => {
+    const link = document.querySelector('link[rel="icon"]') || document.createElement('link');
+    link.rel = 'icon';
+    link.href = faviconSvg;
+    document.head.appendChild(link);
+    document.title = 'WishPal - Your Wish, Matched by AI';
+  }, []);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -307,30 +335,35 @@ export default function Landing() {
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-28 lg:py-36">
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm text-white rounded-full px-5 py-2 mb-8 text-sm font-medium border border-white/10">
-              <span className="text-lg">✨</span>
+              <WishPalLogo size={22} showText={false} />
               <span>AI-Powered Wish Matching Platform</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
-              Your Wish + WishPal ={' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-300">Your Solutions</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+              Got a wish? WishPal makes it happen —
             </h1>
-            <p className="text-xl sm:text-2xl text-purple-200 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Your wish is someone's next opportunity. WishPal brings them together.
+            <p className="text-lg sm:text-xl text-purple-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+              powered by AI and 100% free. Try it now
             </p>
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-8">
+              Your Wish + WishPal ={' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-300">Your Solution</span>
+            </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               {user ? (
                 <Link
                   to="/wish/new"
                   className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-gray-900 text-lg font-bold rounded-lg px-8 py-4 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                 >
-                  ✨ Make a Wish
+                  <WishPalLogo size={20} showText={false} />{' '}
+                  Make a Wish
                 </Link>
               ) : (
                 <Link
                   to="/register"
                   className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-gray-900 text-lg font-bold rounded-lg px-8 py-4 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                 >
-                  ✨ It is Free, start now
+                  <WishPalLogo size={20} showText={false} />{' '}
+                  It is Free, start now
                 </Link>
               )}
               <Link
@@ -740,7 +773,7 @@ export default function Landing() {
       <section className="bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-800 py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full mb-6">
-            <span className="text-3xl">✨</span>
+            <WishPalLogo size={36} showText={false} />
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
             WishPal: The only tool for all your need all times
@@ -765,8 +798,7 @@ export default function Landing() {
           <div className="grid md:grid-cols-4 gap-8 mb-10">
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center space-x-2 mb-4">
-                <span className="text-2xl">✨</span>
-                <span className="text-xl font-bold text-white">WishPal</span>
+                <WishPalLogo size={28} />
               </div>
               <p className="text-sm text-gray-400 leading-relaxed">
                 Your wishes, matched by AI. We connect you with the right people to fulfill your wishes.
